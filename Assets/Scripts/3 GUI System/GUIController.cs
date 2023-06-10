@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// GUI控制模块
+/// GUI Controller Module
 /// </summary>
 public class GUIController : BaseController<GUIController>
 {
@@ -16,12 +16,12 @@ public class GUIController : BaseController<GUIController>
 
     public GUIController()
     {
-        // 创建GUI画布
+        // Create Canvas Object
         GameObject obj = ResourceController.GetController().Load<GameObject>("GUI/General/Canvas");
         canvas = obj.transform;
         GameObject.DontDestroyOnLoad(obj);
         
-        // 创建事件监听器
+        // Create Event Listener
         obj = ResourceController.GetController().Load<GameObject>("GUI/General/EventSystem");
         GameObject.DontDestroyOnLoad(obj);
 
@@ -30,15 +30,15 @@ public class GUIController : BaseController<GUIController>
     }
 
     /// <summary>
-    /// 显示面板
+    /// Show Panel
     /// </summary>
-    /// <param name="panel_name">面板名称</param>
-    /// <param name="layer">层级</param>
-    /// <param name="callback">对面板操作</param>
-    /// <typeparam name="T">面板类型</typeparam>
+    /// <param name="panel_name">name of panel</param>
+    /// <param name="layer">to which layer</param>
+    /// <param name="callback">calling function after panel shows</param>
+    /// <typeparam name="T">type of panel</typeparam>
     public void ShowPanel<T>(string panel_name, int layer, UnityAction<T> callback) where T : PanelBase
     {
-        // 避免面板重复创建
+        // Avoid Panel repeat create
         if(panel_dic.ContainsKey(panel_name))
         {
             panel_dic[panel_name].ShowSelf();
@@ -47,17 +47,17 @@ public class GUIController : BaseController<GUIController>
             return;
         }
 
-        // 避免面板层级超出范围
+        // Avoid layer out of bound
         if(layer >= canvas_layer_count){
             return;
         }
 
-        // 异步加载面板 设置层级和位置
+        // LoadAsync panel, set layer and position
         ResourceController.GetController().LoadAsync<GameObject>("UI/Panels/" + panel_name, (obj) =>
         {
             obj.transform.SetParent(canvas.GetChild(layer));
             obj.transform.localPosition = Vector3.zero;
-            obj.transform.localScale = Vector3.zero;
+            obj.transform.localScale = new Vector3(1, 1, 1);
 
             (obj.transform as RectTransform).offsetMax = Vector2.zero;
             (obj.transform as RectTransform).offsetMin = Vector2.zero;

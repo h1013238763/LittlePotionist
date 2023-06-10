@@ -3,29 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///  可挂载单例模式基类模块
+///  monobehavior unique object controller module
 /// </summary>
-/// <typeparam name="T"> 子类 </typeparam>
+/// <typeparam name="T"> child class </typeparam>
 public class BaseControllerMono<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T controller;
 
     /// <summary>
-    /// 创建一个挂载该脚本的物体，定义并返回一个唯一静态管理器
+    /// Find or create a gameobject with controller component and return the controller
     /// </summary>
-    /// <returns></returns>
+    /// <returns> the controller</returns>
     public static T GetController()
     {
         if(controller == null)
         {
-            GameObject obj = new GameObject();
-            obj.name = typeof(T).ToString();
-            controller = obj.AddComponent<T>();
+            GameObject obj = GameObject.Find("MonoController");
+            if(obj == null)
+            {
+                Debug.Log("Creating");
+                obj = new GameObject("MonoController");
+                GameObject.DontDestroyOnLoad(obj);
+            }
 
-            GameObject.DontDestroyOnLoad(obj);
+            controller = obj.GetComponent<T>();
+            if(controller == null)
+                controller = obj.AddComponent<T>();            
         }
         return controller;
     }
-
-
 }
