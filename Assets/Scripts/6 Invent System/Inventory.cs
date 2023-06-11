@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    public int invent_id;
     public StoreItem[] item_list;
     public int invent_capa;
 

@@ -30,9 +30,7 @@ public class CameraController : BaseControllerMono<CameraController>
 
     private void Initial()
     {
-        main_camera = GameObject.Find("Main Camera");
-        if(main_camera == null)
-            main_camera = new GameObject("Main Camera");
+        main_camera = gameObject;
     }
 
     public void SwitchCameraMode(int id)

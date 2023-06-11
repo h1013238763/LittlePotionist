@@ -5,8 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Panel Base Module
-///     Quick Add and Search Components
+/// 面板基类模块
+///     快速查找和添加控件
 /// </summary>
 public class PanelBase : MonoBehaviour
 {
@@ -31,11 +31,11 @@ public class PanelBase : MonoBehaviour
     protected virtual void OnValueChanged(string toggle_name, bool is_check){}
 
     /// <summary>
-    /// Find Target Child Object
+    /// 获得指定控件
     /// </summary>
-    /// <param name="control_name">Object name</param>
-    /// <typeparam name="T">Object type</typeparam>
-    /// <returns>target Object</returns>
+    /// <param name="control_name">物体名称</param>
+    /// <typeparam name="T">控件类型</typeparam>
+    /// <returns>对应控件</returns>
     protected T FindComponent<T>(string control_name) where T : UIBehaviour
     {
         if(control_dic.ContainsKey(control_name))

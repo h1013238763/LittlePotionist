@@ -5,6 +5,7 @@ using UnityEngine;
 public class InventoryController : BaseController<InventoryController>
 {
     public Dictionary<int, Item> item_dict = new Dictionary<int, Item>();
+    public List<Inventory> invent_list = new List<Inventory>();
 
     /// <summary>
     /// add items into inventory

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : BaseControllerMono<PlayerController>
+public class PlayerController : MonoBehaviour
 {
     // Components
-    public GameObject player;           // player game object
-    public Inventory player_invent;     // player inventory
     public Rigidbody2D player_rigid;    // rigidbody2d component
     public Actions player_actions;      // input action 
     
@@ -16,8 +14,12 @@ public class PlayerController : BaseControllerMono<PlayerController>
 
     void Awake()
     {
-        Initial();
+        // Assign Component
+        player_rigid = GetComponent<Rigidbody2D>();
+        player_actions = new Actions();
+
         // action register
+
 
         // Assign Variable
         player_move = 5f;
@@ -36,10 +38,8 @@ public class PlayerController : BaseControllerMono<PlayerController>
 
     // Update is called once per frame
     void Update()
-    {   
-        Face();
+    {
         Movement();
-
     }
 
     void OnDisable()
@@ -52,10 +52,11 @@ public class PlayerController : BaseControllerMono<PlayerController>
         // Assign Component
         player = GameObject.Find("Player");
         if(player == null)
-            player = ResourceController.GetController().Load<GameObject>("General/Player");
+            player = ResourceController.GetController().Load<GameObject>("General/Player");  
+
 
         player_invent = player.GetComponent<Inventory>();
-        if(player_invent == null)
+        if(player_invent)
             player_invent = player.AddComponent<Inventory>();
         player_invent.Initial(20);
 
@@ -78,6 +79,4 @@ public class PlayerController : BaseControllerMono<PlayerController>
     {
         player_rigid.velocity = player_move * player_actions.Player.Movement.ReadValue<Vector2>();
     }
-
-    
 }
