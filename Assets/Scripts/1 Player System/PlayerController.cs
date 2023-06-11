@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
         player_actions.Player.Disable();
     }
 
+<<<<<<< HEAD
     public void Initial()
     {   
         // Assign Component
@@ -72,6 +73,8 @@ public class PlayerController : MonoBehaviour
         player.GetComponent<SpriteRenderer>().flipX = Mouse.current.position.ReadValue().x > Screen.width/2;
     }
 
+=======
+>>>>>>> parent of ae47528 (v 0.01a)
     /// <summary>
     /// Player Movement
     /// </summary>
