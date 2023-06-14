@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 场景切换模块
+/// Scene Changing module
 /// </summary>
 public class SceneController : BaseController<SceneController>
 {

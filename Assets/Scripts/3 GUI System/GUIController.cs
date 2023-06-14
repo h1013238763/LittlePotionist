@@ -36,7 +36,7 @@ public class GUIController : BaseController<GUIController>
     /// <param name="layer">to which layer</param>
     /// <param name="callback">calling function after panel shows</param>
     /// <typeparam name="T">type of panel</typeparam>
-    public void ShowPanel<T>(string panel_name, int layer, UnityAction<T> callback) where T : PanelBase
+    public void ShowPanel<T>(string panel_name, int layer, UnityAction<T> callback = null) where T : PanelBase
     {
         // Avoid Panel repeat create
         if(panel_dic.ContainsKey(panel_name))

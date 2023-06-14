@@ -10,6 +10,19 @@ public class ItemController : BaseController<ItemController>
     public Dictionary<string, StoreItem[]> invent_dict = new Dictionary<string, StoreItem[]>();
 
 
+    public void AddToItemDictionary(Item item)
+    {
+        // check if there exist target item
+        if(item_dict.ContainsKey(item.item_id))
+            return;
+        // add to dictionary
+        item_dict.Add(item.item_id, item);
+
+        // add item use event to Event Controller if this item is usable
+        if(item.item_usable)
+            EventController.GetController().AddEventListener("Item/"+item.item_id.ToString(), item.UseEffect);
+    }
+
     /// <summary>
     /// add items into inventory
     /// </summary>
@@ -54,7 +67,7 @@ public class ItemController : BaseController<ItemController>
                     num = 0;
                 }
             }
-            if(num == 0)
+            if(num <= 0)
                 return num_re;
         }
         return num_re - num;
@@ -89,10 +102,29 @@ public class ItemController : BaseController<ItemController>
                     item.item_id = 0;
                 }
             }
-            if(num == 0)
+            if(num <= 0)
                 return num_re;
         }
         return num_re - num;
+    }
+
+    /// <summary>
+    /// player use the item in quick slot
+    /// </summary>
+    /// <param name="id">the index of quick slot</param>
+    public void UseItem(int index)
+    {
+        int id;
+        // check if anything to use
+        if(invent_dict["QuickSlot"][index].item_id == 0)
+            return;
+
+        // trigger use event
+        id = invent_dict["QuickSlot"][index].item_id;
+        EventController.GetController().EventTrigger("Item/"+id.ToString());
+
+        // remove item
+        RemoveItem("QuickSlot", id, 1);
     }
 
     /// <summary>

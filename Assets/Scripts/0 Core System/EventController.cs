@@ -115,29 +115,30 @@ public class EventController : BaseController<EventController>
     {
         event_dic.Clear();
     }
-}
 
-/// <summary>
-/// Interface for encapsulation
-/// </summary>
-public interface IEventInfo{}
+    /// <summary>
+    /// Interface for encapsulation
+    /// </summary>
+    public interface IEventInfo{}
 
-public class EventInfo<T> : IEventInfo
-{
-    public UnityAction<T> actions;
-
-    public EventInfo( UnityAction<T> action )
+    public class EventInfo<T> : IEventInfo
     {
-        actions += action;
+        public UnityAction<T> actions;
+
+        public EventInfo( UnityAction<T> action )
+        {
+            actions += action;
+        }
+    }
+
+    public class EventInfo : IEventInfo
+    {
+        public UnityAction actions;
+
+        public EventInfo( UnityAction action )
+        {
+            actions += action;
+        }
     }
 }
 
-public class EventInfo : IEventInfo
-{
-    public UnityAction actions;
-
-    public EventInfo( UnityAction action )
-    {
-        actions += action;
-    }
-}

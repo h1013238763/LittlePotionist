@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Mono管理模块
+/// MonoBehavior controller module
 /// </summary>
 public class MonoController : BaseControllerMono<MonoController>
 {
@@ -24,7 +24,7 @@ public class MonoController : BaseControllerMono<MonoController>
     }
 
     /// <summary>
-    /// 添加帧更新事件
+    /// Add Update invoke event
     /// </summary>
     /// <param name="fun"></param>
     public void AddUpdateListener(UnityAction fun)
@@ -33,7 +33,7 @@ public class MonoController : BaseControllerMono<MonoController>
     }
 
     /// <summary>
-    /// 去除帧更新事件
+    /// Remove Update invoke event
     /// </summary>
     public void RemoveUpdateListener(UnityAction fun)
     {

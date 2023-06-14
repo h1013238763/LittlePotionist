@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         player_actions = new Actions();
 
         // Action Initial
-        player_actions.Building.Act.performed += Act;
+        player_actions.Building.Interact.performed += Interact;
     }
 
     /// <summary>
@@ -82,14 +82,17 @@ public class PlayerController : MonoBehaviour
         switch(action)
         {
             case PlayerActionMode.Normal:
+                player_actions.General.Enable();
                 player_actions.Player.Enable();
                 player_actions.Building.Disable();
                 break;
             case PlayerActionMode.Building:
+                player_actions.General.Enable();
                 player_actions.Player.Disable();
                 player_actions.Building.Enable();
                 break;
             case PlayerActionMode.End:
+                player_actions.General.Disable();
                 player_actions.Player.Disable();
                 player_actions.Building.Disable();
                 break;
@@ -111,16 +114,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Movement()
     {
-        player_rigid.velocity = player_move * player_actions.Player.Movement.ReadValue<Vector2>();
+        player_rigid.velocity = player_move * player_actions.General.Movement.ReadValue<Vector2>();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void Use(InputAction.CallbackContext context)
+    {
+        
     }
 
     /// <summary>
     /// Invoke the building system function when mouse left pressed
     /// </summary>
-    private void Act(InputAction.CallbackContext context)
+    private void Interact(InputAction.CallbackContext context)
     {
-        if(BuildController.GetController().build_mode != "")
-            EventController.GetController().EventTrigger<Vector2>(BuildController.GetController().build_mode, Mouse.current.position.ReadValue());
+        
     }
 
 
