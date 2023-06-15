@@ -5,6 +5,7 @@ using UnityEngine;
 public class Item
 {
     public int item_id;
+    public Sprite item_sprite;
     public string item_name;
     public string item_describe;
     public int item_stack;

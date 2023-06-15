@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// unique object controller module
 /// </summary>
-/// <typeparam name="T"> 子类 - child class </typeparam>
+/// <typeparam name="T">child class </typeparam>
 public class BaseController<T> where T: new()
 {
     private static T controller;

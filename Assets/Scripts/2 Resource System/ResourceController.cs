@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 资源加载模块
+/// Resource Loading Module
 /// </summary>
 public class ResourceController : BaseController<ResourceController>
 {

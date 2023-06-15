@@ -17,13 +17,17 @@ public class GUIController : BaseController<GUIController>
     public GUIController()
     {
         // Create Canvas Object
-        GameObject obj = ResourceController.GetController().Load<GameObject>("GUI/General/Canvas");
-        canvas = obj.transform;
-        GameObject.DontDestroyOnLoad(obj);
+        GameObject temp_canvas = GameObject.Find("Canvas");
+        if(temp_canvas == null)
+            ResourceController.GetController().Load<GameObject>("GUI/General/Canvas");
+        canvas = temp_canvas.transform;
+        GameObject.DontDestroyOnLoad(temp_canvas);
         
         // Create Event Listener
-        obj = ResourceController.GetController().Load<GameObject>("GUI/General/EventSystem");
-        GameObject.DontDestroyOnLoad(obj);
+        GameObject temp_event = GameObject.Find("EventSystem");
+        if(temp_event == null)
+            temp_event = ResourceController.GetController().Load<GameObject>("GUI/General/EventSystem");
+        GameObject.DontDestroyOnLoad(temp_event);
 
         foreach( Transform child in canvas)
             canvas_layer_count ++;
@@ -53,18 +57,19 @@ public class GUIController : BaseController<GUIController>
         }
 
         // LoadAsync panel, set layer and position
-        ResourceController.GetController().LoadAsync<GameObject>("UI/Panels/" + panel_name, (obj) =>
+        ResourceController.GetController().LoadAsync<GameObject>("GUI/Panels/" + panel_name, (obj) =>
         {
+            
             obj.transform.SetParent(canvas.GetChild(layer));
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = new Vector3(1, 1, 1);
+            obj.name = panel_name;
 
             (obj.transform as RectTransform).offsetMax = Vector2.zero;
             (obj.transform as RectTransform).offsetMin = Vector2.zero;
 
             T panel = obj.GetComponent<T>();
-
-            // 处理并储存面板
+            // invoke he call back event
             if(callback != null)
                 callback(panel);
             panel.ShowSelf();            
@@ -73,9 +78,9 @@ public class GUIController : BaseController<GUIController>
     }
 
     /// <summary>
-    /// 隐藏面板
+    /// Hide Panel
     /// </summary>
-    /// <param name="panel_name">面板名称</param>
+    /// <param name="panel_name">the name of panel</param>
     public void HidePanel(string panel_name)
     {
         if(panel_dic.ContainsKey(panel_name))
@@ -86,10 +91,10 @@ public class GUIController : BaseController<GUIController>
     }
 
     /// <summary>
-    ///  获取一个已存在面板
+    ///  Get a exist panel
     /// </summary>
-    /// <param name="panel_name">面板名称</param>
-    /// <returns>对应面板</returns>
+    /// <param name="panel_name">the name of panel</param>
+    /// <returns>target panel</returns>
     public T GetPanel<T>(string panel_name) where T : PanelBase
     {
         if(panel_dic.ContainsKey(panel_name))
@@ -98,11 +103,11 @@ public class GUIController : BaseController<GUIController>
     }
 
     /// <summary>
-    /// 给控件添加自定义事件
+    /// Add a custom event trigger to gui object from scripts
     /// </summary>
-    /// <param name="control">对应控件</param>
-    /// <param name="type">事件类型</param>
-    /// <param name="callback">响应函数</param>
+    /// <param name="control">the gui object</param>
+    /// <param name="type">the type of trigger event</param>
+    /// <param name="callback">the function to call</param>
     public static void AddCustomEventListener(UIBehaviour control, EventTriggerType type, UnityAction<BaseEventData> callback)
     {
         EventTrigger trigger = control.GetComponent<EventTrigger>();

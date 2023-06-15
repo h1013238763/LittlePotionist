@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GeneralPanel : PanelBase
 {
@@ -11,7 +13,7 @@ public class GeneralPanel : PanelBase
     protected override void Awake()
     {
         base.Awake();
-        Initial();
+        ShowSelf();
     }
 
     void Start()
@@ -19,12 +21,17 @@ public class GeneralPanel : PanelBase
         
     }
 
-    /// <summary>
-    /// Initial the General Panel
-    /// </summary>
-    public void Initial()
+    public override void ShowSelf()
     {
         ItemController.GetController().AddInvent("QuickSlot", 8);
+
+        Button[] ctrls = this.GetComponentsInChildren<Button>();
+
+        for(int i = 0; i < ctrls.Length; i++)
+        {
+            GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerEnter, (data) => {OnPointerEnter((PointerEventData)data); });
+            GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerExit,  (data) => {OnPointerExit ((PointerEventData)data); });
+        }
     }
 
     public void Use()
@@ -55,7 +62,17 @@ public class GeneralPanel : PanelBase
         }
         else
         {
-
+            switch(button_name)
+            {
+                case "InventoryPanel":
+                    if(GUIController.GetController().GetPanel<InventoryPanel>("InventoryPanel") != null)
+                        GUIController.GetController().HidePanel("InventoryPanel");
+                    else
+                        GUIController.GetController().ShowPanel<InventoryPanel>("InventoryPanel", 2);
+                    break;
+                default:
+                    break;
+            }     
         }    
     }
 
@@ -68,26 +85,31 @@ public class GeneralPanel : PanelBase
         OnClick(button_name);
     }
 
-
-    public void PointerEnter(Transform transform)
+    /// <summary>
+    /// Pointer Enter Event
+    /// </summary>
+    private void OnPointerEnter(PointerEventData event_data)
     {
-        string name = PointerEventCheck(transform);
-        
-        if(name != "")
-            TweenController.GetController().MoveToPosition(transform, button_pos[name]+new Vector3(0, 5, 0), 0.07f);
+        string name = PointerEventHandle(event_data);
+        TweenController.GetController().MoveToPosition(FindComponent<Button>(name).transform, button_pos[name] + new Vector3(0, 5, 0), 0.07f);
     }
 
-    public void PointerExit(Transform transform)
+    /// <summary>
+    /// Pointer Exit Event
+    /// </summary>
+    private void OnPointerExit(PointerEventData event_data)
     {
-        string name = PointerEventCheck(transform);
-        
-        if(name != "")
-            TweenController.GetController().MoveToPosition(transform, button_pos[name], 0.07f);
+        string name = PointerEventHandle(event_data);
+        TweenController.GetController().MoveToPosition(FindComponent<Button>(name).transform, button_pos[name], 0.07f);
     }
 
-    private string PointerEventCheck(Transform transform)
+    /// <summary>
+    /// Pointer data analyze and handle
+    /// </summary>
+    /// <returns>the name of triggered gui object</returns>
+    private string PointerEventHandle(PointerEventData event_data)
     {
-        string name = transform.gameObject.name;
+        string name = event_data.pointerEnter.name;
 
         if(!button_pos.ContainsKey(name))
             button_pos.Add(name, FindComponent<Button>(name).transform.position);

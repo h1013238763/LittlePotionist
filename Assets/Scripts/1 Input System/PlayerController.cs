@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         if(player == null)
             player = ResourceController.GetController().Load<GameObject>("General/Player");
 
-        ItemController.GetController().AddInvent("Player", 20);
+        ItemController.GetController().AddInvent("Player", 35);
 
         player_rigid = player.GetComponent<Rigidbody2D>();
         player_actions = new Actions();

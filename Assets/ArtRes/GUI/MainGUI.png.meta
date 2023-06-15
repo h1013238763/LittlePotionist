@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 30ceb4f3c7f680145bbba82846123500
+guid: 00d33e2129fe8ea44aad294a4435c8cc
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 1024
     resizeAlgorithm: 1
     textureFormat: -1
     textureCompression: 0
@@ -105,55 +105,55 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Slots_2_0
+      name: MainGUI_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 124
+        y: 271
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3cb0cfcd06817b746be2f668ee9252a1
-      internalID: -1694661657
+      spriteID: fb848f26dbe5e184caaee263e2eb7402
+      internalID: -1365952260
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slots_2_1
+      name: MainGUI_1
       rect:
         serializedVersion: 2
-        x: 36
-        y: 0
+        x: 89
+        y: 271
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d4ca024dc370f2648a00a05ccc82a0b2
-      internalID: 76160617
+      spriteID: d194738667031be44beae867e7e23e40
+      internalID: -583183627
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Slots_2_2
+      name: MainGUI_3
       rect:
         serializedVersion: 2
-        x: 72
-        y: 0
-        width: 32
-        height: 32
+        x: 83
+        y: 427
+        width: 12
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -161,8 +161,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27840df55f498e348a974b44288dd5ac
-      internalID: 847103325
+      spriteID: 74b8e7ff3e4547f4aa5df2a74dcefdfb
+      internalID: -234528418
       vertices: []
       indices: 
       edges: []
@@ -178,9 +178,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Slots_2_0: -1694661657
-      Slots_2_1: 76160617
-      Slots_2_2: 847103325
+      MainGUI_1: -583183627
+      MainGUI_0: -1365952260
+      MainGUI_3: -234528418
+      MainGUI_2: -1937953782
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

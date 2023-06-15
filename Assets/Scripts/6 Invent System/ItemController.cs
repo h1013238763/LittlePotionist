@@ -5,9 +5,11 @@ using UnityEngine;
 public class ItemController : BaseController<ItemController>
 {
     // Item dictionary, store all item data
-    public Dictionary<int, Item> item_dict = new Dictionary<int, Item>();
+    private Dictionary<int, Item> item_dict = new Dictionary<int, Item>();
     // inventory dictionary, store all inventory data
-    public Dictionary<string, StoreItem[]> invent_dict = new Dictionary<string, StoreItem[]>();
+    private Dictionary<string, StoreItem[]> invent_dict = new Dictionary<string, StoreItem[]>();
+
+    public int wealth;
 
 
     public void AddToItemDictionary(Item item)
@@ -128,6 +130,18 @@ public class ItemController : BaseController<ItemController>
     }
 
     /// <summary>
+    /// Return the item for other class by its id
+    /// </summary>
+    /// <param name="id">the id of item</param>
+    /// <returns>target item</returns>
+    public Item GetItemInfo(int id)
+    {
+        if(item_dict.ContainsKey(id))
+            return item_dict[id];
+        return null;
+    }
+
+    /// <summary>
     /// count the number of target item in inventory
     /// </summary>
     /// <param name="invent">the inventory to check</param>
@@ -203,5 +217,17 @@ public class ItemController : BaseController<ItemController>
     {
         if(!invent_dict.ContainsKey(name))
             invent_dict.Add(name, new StoreItem[num]);
+    }
+
+    /// <summary>
+    /// Get Inventory by its name
+    /// </summary>
+    /// <param name="name">the name of inventory</param>
+    /// <returns>target inventory</returns>
+    public StoreItem[] GetInvent(string name)
+    {
+        if(invent_dict.ContainsKey(name))
+            return invent_dict[name];
+        return null;
     }
 }
