@@ -5,24 +5,53 @@ using UnityEngine;
 public class ItemController : BaseController<ItemController>
 {
     // Item dictionary, store all item data
-    private Dictionary<int, Item> item_dict = new Dictionary<int, Item>();
+    private XmlDictionary<string, Item> item_dict = new XmlDictionary<string, Item>();
     // inventory dictionary, store all inventory data
-    private Dictionary<string, StoreItem[]> invent_dict = new Dictionary<string, StoreItem[]>();
+    private XmlDictionary<string, StoreItem[]> invent_dict = new XmlDictionary<string, StoreItem[]>();
 
     public int wealth;
 
 
-    public void AddToItemDictionary(Item item)
+    public void Initial()
     {
-        // check if there exist target item
-        if(item_dict.ContainsKey(item.item_id))
-            return;
-        // add to dictionary
-        item_dict.Add(item.item_id, item);
+        Item temp_1 = new Item();
+        temp_1.item_id = "Potionist: Bed";
+        temp_1.item_name = "Bed";
+        temp_1.item_describe = "A nice bed";
+        temp_1.item_stack = 1;
+        temp_1.item_price = 100;
+        temp_1.item_usable = true;
+        item_dict.Add(temp_1.item_id, temp_1);
 
-        // add item use event to Event Controller if this item is usable
-        if(item.item_usable)
-            EventController.GetController().AddEventListener("Item/"+item.item_id.ToString(), item.UseEffect);
+        Item temp_2 = new Item();
+        temp_2.item_id = "Potionist: Chair";
+        temp_2.item_name = "Chair";
+        temp_2.item_describe = "A nice Chair";
+        temp_2.item_stack = 1;
+        temp_2.item_price = 100;
+        temp_2.item_usable = true;
+        item_dict.Add(temp_2.item_id, temp_2);
+
+        Item temp_3 = new Item();
+        temp_3.item_id = "Potionist: Seed";
+        temp_3.item_name = "Seed";
+        temp_3.item_describe = "A nice Seed";
+        temp_3.item_stack = 20;
+        temp_3.item_price = 25;
+        temp_3.item_usable = true;
+        item_dict.Add(temp_3.item_id, temp_3);
+
+        XmlController.GetController().SaveData(item_dict, "PotionistItems", "Item/");
+    }
+
+    public XmlDictionary<string, StoreItem[]> GetInventInfo()
+    {
+        return invent_dict;
+    }
+
+    public XmlDictionary<string, StoreItem[]> InventData()
+    {
+        return invent_dict;
     }
 
     /// <summary>
@@ -32,40 +61,42 @@ public class ItemController : BaseController<ItemController>
     /// <param name="id">the item to add</param>
     /// <param name="num">the number to add</param>
     /// <returns>how many items are added</returns>
-    public int AddItem(string invent, int id, int num)
+    public int AddItem(string invent_name, string id, int num)
     {   
-        if(!invent_dict.ContainsKey(invent))
+        if(!invent_dict.ContainsKey(invent_name))
             return 0;
+        StoreItem[] invent = invent_dict[invent_name];
 
         int num_re = num;
-        foreach(StoreItem item in invent_dict[invent])
+        for(int i = 0; i < invent.Length; i ++)
         {
             
-            if(item.item_id == 0)
+            if(invent[i] == null)
             {
-                item.item_id = id;
+                invent[i] = new StoreItem();
+                invent[i].item_id = id;
                 if(num > item_dict[id].item_stack)
                 {
-                    item.item_num = item_dict[id].item_stack;
+                    invent[i].item_num = item_dict[id].item_stack;
                     num -= item_dict[id].item_stack; 
                 } 
                 else
                 {
-                    item.item_num = num;
+                    invent[i].item_num = num;
                     num = 0;
                 }
             }
-            else if(item.item_id == id && item.item_num < item_dict[id].item_stack)
+            else if(invent[i].item_id == id && invent[i].item_num < item_dict[id].item_stack)
             {
-                int temp = item_dict[id].item_stack - item.item_num;
+                int temp = item_dict[id].item_stack - invent[i].item_num;
                 if(temp < num)
                 {
-                    item.item_num += temp;
+                    invent[i].item_num += temp;
                     num -= temp;
                 }   
                 else
                 {
-                    item.item_num += num;
+                    invent[i].item_num += num;
                     num = 0;
                 }
             }
@@ -82,26 +113,28 @@ public class ItemController : BaseController<ItemController>
     /// <param name="id">the item to remove</param>
     /// <param name="num">the number to remove</param>
     /// <returns>how many items are removed</returns>
-    public int RemoveItem(string invent, int id, int num)
+    public int RemoveItem(string invent_name, string id, int num)
     {
-        if(!invent_dict.ContainsKey(invent))
+        if(!invent_dict.ContainsKey(invent_name))
             return 0;
+        StoreItem[] invent = invent_dict[invent_name];
 
         int num_re = num;
-        foreach(StoreItem item in invent_dict[invent])
+        for(int i = 0; i < invent.Length; i ++)
         {
-            if(item.item_id == id)
+            if(invent[i] == null)
+                continue;
+            if(invent[i].item_id == id)
             {
-                if(item.item_num > num)
+                if(invent[i].item_num > num)
                 {
-                    item.item_num -= num;
+                    invent[i].item_num -= num;
                     num = 0;
                 }
                 else
                 {
-                    num -= item.item_num;
-                    item.item_num = 0;
-                    item.item_id = 0;
+                    num -= invent[i].item_num;
+                    invent[i] = null;
                 }
             }
             if(num <= 0)
@@ -113,17 +146,16 @@ public class ItemController : BaseController<ItemController>
     /// <summary>
     /// player use the item in quick slot
     /// </summary>
-    /// <param name="id">the index of quick slot</param>
+    /// <param name="index">the index of quick slot</param>
     public void UseItem(int index)
     {
-        int id;
         // check if anything to use
-        if(invent_dict["QuickSlot"][index].item_id == 0)
+        if(invent_dict["QuickSlot"][index] == null)
             return;
 
         // trigger use event
-        id = invent_dict["QuickSlot"][index].item_id;
-        EventController.GetController().EventTrigger("Item/"+id.ToString());
+        string id = invent_dict["QuickSlot"][index].item_id;
+        EventController.GetController().EventTrigger("Item/" + id);
 
         // remove item
         RemoveItem("QuickSlot", id, 1);
@@ -134,11 +166,21 @@ public class ItemController : BaseController<ItemController>
     /// </summary>
     /// <param name="id">the id of item</param>
     /// <returns>target item</returns>
-    public Item GetItemInfo(int id)
+    public Item GetItemInfo(string id)
     {
         if(item_dict.ContainsKey(id))
             return item_dict[id];
         return null;
+    }
+
+    /// <summary>
+    /// return the sprite of item for other class by its id
+    /// </summary>
+    /// <param name="id">the id of item</param>
+    /// <returns>target item sprite</returns>
+    public Sprite GetItemSprite(string id)
+    {
+        return ResourceController.GetController().Load<Sprite>("ItemImage/"+id);
     }
 
     /// <summary>
@@ -147,16 +189,17 @@ public class ItemController : BaseController<ItemController>
     /// <param name="invent">the inventory to check</param>
     /// <param name="id">the target item</param>
     /// <returns>the number of target item</returns>
-    public int ItemCount(string invent, int id)
+    public int ItemCount(string invent_name, string id)
     {
-        if(!invent_dict.ContainsKey(invent))
+        if(!invent_dict.ContainsKey(invent_name))
             return 0;
+        StoreItem[] invent = invent_dict[invent_name];
 
         int num = 0;
-        foreach(StoreItem item in invent_dict[invent])
+        for(int i = 0; i < invent.Length; i ++)
         {
-            if(item.item_id == id)
-                num += item.item_num;
+            if(invent[i].item_id == id)
+                num += invent[i].item_num;
         }
         return num;
     }
@@ -168,17 +211,18 @@ public class ItemController : BaseController<ItemController>
     /// <param name="id">item id to check</param>
     /// <param name="num">number to check</param>
     /// <returns>true if there is enough slots</returns>
-    public bool CapacityCheck(string invent, int id, int num)
+    public bool CapacityCheck(string invent_name, string id, int num)
     {
-        if(!invent_dict.ContainsKey(invent))
+        if(!invent_dict.ContainsKey(invent_name))
             return false;
+        StoreItem[] invent = invent_dict[invent_name];
 
-        foreach(StoreItem item in invent_dict[invent])
+        for(int i = 0; i < invent.Length; i ++)
         {
-            if(item.item_id == 0 )
+            if(invent[i] == null)
                 num -= item_dict[id].item_stack;
-            else if(item.item_id == id && item.item_num < item_dict[id].item_stack)
-                num -= item_dict[id].item_stack - item.item_num;
+            else if(invent[i].item_id == id && invent[i].item_num < item_dict[id].item_stack)
+                num -= item_dict[id].item_stack - invent[i].item_num;
             
             if(num <= 0)
                 return true;
@@ -193,15 +237,19 @@ public class ItemController : BaseController<ItemController>
     /// <param name="id">item id to check</param>
     /// <param name="num">number to check</param>
     /// <returns>true if there is enough items</returns>
-    public bool AvailableCheck(string invent, int id, int num)
+    public bool AvailableCheck(string invent_name, string id, int num)
     {
-        if(!invent_dict.ContainsKey(invent))
+        if(!invent_dict.ContainsKey(invent_name))
             return false;
+        StoreItem[] invent = invent_dict[invent_name];
 
-        foreach(StoreItem item in invent_dict[invent])
+        for(int i = 0; i < invent.Length; i ++)
         {
-            if(item.item_id == id )
-                num -= item.item_num;
+            if(invent[i] == null)
+                continue;
+            else if(invent[i].item_id == id )
+                num -= invent[i].item_num;
+
             if(num <= 0)
                 return true;
         }

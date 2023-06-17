@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 对象缓存池模块
+/// Object Pool Module
 /// </summary>
 public class PoolController : BaseController<PoolController>
 {
@@ -89,21 +89,19 @@ public class PoolController : BaseController<PoolController>
 }
 
 /// <summary>
-/// 自定义对象池类
+/// Custom Object Pool Class
 /// </summary>
 public class PoolData
 {
     
-    public GameObject pool_obj;         // 场景中收纳对象物体的物体
-    public List<GameObject> pool_list;  // 对象池数据
+    public GameObject pool_obj;         // object
+    public List<GameObject> pool_list;  // pool of objects
 
     /// <summary>
-    /// 构造器
-    ///     初始化收纳物体并设置层级
-    ///     存储当前物体
+    /// Constructor
     /// </summary>
-    /// <param name="obj"> 需要储存的对象 </param>
-    /// <param name="dic_obj"> 辞典用的父物体 </param>
+    /// <param name="obj"> the object to store </param>
+    /// <param name="dic_obj"> parent object for dictionary </param>
     public PoolData(GameObject dic_obj, string name)
     {
         pool_obj = new GameObject(name);

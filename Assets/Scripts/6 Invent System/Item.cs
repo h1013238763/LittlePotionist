@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Item
 {
-    public int item_id;
-    public Sprite item_sprite;
+    public string item_id;
     public string item_name;
     public string item_describe;
     public int item_stack;
@@ -13,4 +12,9 @@ public class Item
     public bool item_usable;
 
     public virtual void UseEffect(){}
+
+    public override string ToString()
+    {
+        return "Item[ id="+item_id+" ]";
+    }
 }

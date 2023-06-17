@@ -5,7 +5,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using UnityEngine;
 
-public class XMLDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+public class XmlDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
 {
     public XmlSchema GetSchema()
     {

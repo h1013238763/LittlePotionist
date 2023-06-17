@@ -70,6 +70,11 @@ public class GeneralPanel : PanelBase
                     else
                         GUIController.GetController().ShowPanel<InventoryPanel>("InventoryPanel", 2);
                     break;
+                case "CharacterPanel":
+                    ItemController.GetController().Initial();
+                    break;
+                case "MapPanel":
+                    break;
                 default:
                     break;
             }     

@@ -25,7 +25,7 @@ public class InventoryPanel : PanelBase
             }
             else
             {
-                slot.GetChild(0).gameObject.GetComponent<Image>().sprite = ItemController.GetController().GetItemInfo(player_invent[i].item_id).item_sprite;
+                slot.GetChild(0).gameObject.GetComponent<Image>().sprite = ItemController.GetController().GetItemSprite(player_invent[i].item_id);
                 slot.GetChild(1).gameObject.GetComponent<Text>().text = player_invent[i].item_num.ToString();
             }
         }

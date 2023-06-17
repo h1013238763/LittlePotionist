@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class StoreItem
 {
-    public int item_id;
+    public string item_id;
     public int item_num;
 
     public StoreItem()
     {
-        item_id = 0;
+        item_id = "";
         item_num = 0;
     }
 
@@ -19,7 +19,7 @@ public class StoreItem
         item_num = item.item_num;
     }
 
-    public StoreItem(int id, int num)
+    public StoreItem(string id, int num)
     {
         item_id = id;
         item_num = num;

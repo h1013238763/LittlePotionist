@@ -8,20 +8,25 @@ using System.Xml.Serialization;
 using System.IO;
 using UnityEngine;
 
-public class XMLController : BaseController<XMLController>
+public class XmlController : BaseController<XmlController>
 {
 
     /// <summary>
-    /// 保存数据到xml文件
+    /// Save data to XML File
     /// </summary>
-    /// <param name="data">数据对象</param>
-    /// <param name="file_name">文件名</param>
-    public void SavaData(object data, string file_name)
+    /// <param name="data">data object</param>
+    /// <param name="file_name">file name</param>
+    /// <param name="dir">the sub folder</param>
+    public void SaveData(object data, string file_name, string dir = "")
     {
-        // 获取储存路径
-        string path = Application.persistentDataPath + "/" + data.GetType() + "/" + file_name + ".xml";
+        // get the save path
+        string path = Application.persistentDataPath + "/" + dir;
+        // path checking
+        if(!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+        path += "/" + file_name + ".xml";
 
-        // 创建写入器，序列化并储存文件
+        // create a writer and serialize
         using(StreamWriter writer = new StreamWriter(path))
         {
             XmlSerializer s = new XmlSerializer(data.GetType());
@@ -30,26 +35,41 @@ public class XMLController : BaseController<XMLController>
     }
 
     /// <summary>
-    /// 从文件中读取内容
+    /// read data from xml file
     /// </summary>
-    /// <param name="type">对象类型</param>
-    /// <param name="file_name">文件名</param>
+    /// <param name="type">object type</param>
+    /// <param name="file_name">name of file</param>
+    /// <param name="dir">the sub folder</param>
     /// <returns></returns>
-    public object LoadData(Type type, string file_name)
+    public object LoadData(Type type, string file_name, string dir = "")
     {
-        // 在两个路径中分别查找文件
-        string path = Application.persistentDataPath + "/" + type.Name + "/" + file_name + ".xml";
+        // try to find file in two paths
+        string path = Application.persistentDataPath + "/" + dir + file_name + ".xml";
         if(!File.Exists(path))
-            path = Application.streamingAssetsPath + "/" + type.Name + "/" + file_name + ".xml";
+            path = Application.streamingAssetsPath + "/" + dir + file_name + ".xml";
         if(!File.Exists(path))
-            return Activator.CreateInstance(type);  // 如未找到则返回一个默认文件
+            return null;  // return a default file if not found
 
-        // 使用指定路径读取文件
+        // // create a reader and deserialize
         using (StreamReader reader = new StreamReader(path))
         {
-            XmlSerializer s = new XmlSerializer(type.GetType());
-            s.Deserialize(reader);
+            XmlSerializer s = new XmlSerializer(type);
+            return s.Deserialize(reader);
         }
-        return null;
+    }
+
+    /// <summary>
+    /// delete file by given name
+    /// </summary>
+    /// <param name="file_name">name of file</param>
+    /// <param name="dir">the sub folder</param>
+    public void DeleteData(string file_name, string dir = "")
+    {
+        string path = Application.persistentDataPath + "/" + dir + file_name + ".xml";
+
+        if(File.Exists(path))
+        {
+            File.Delete(path);
+        }
     }
 }

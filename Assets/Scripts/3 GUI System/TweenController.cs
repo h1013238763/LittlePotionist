@@ -67,6 +67,13 @@ public class TweenController : BaseControllerMono<TweenController>
         remove_wait.Clear();
     }
 
+    /// <summary>
+    /// Move object to target position in time
+    /// </summary>
+    /// <param name="transform">target object</param>
+    /// <param name="pos">target position</param>
+    /// <param name="time">time limit</param>
+    /// <param name="type">animate type</param>
     public void MoveToPosition(Transform transform, Vector3 pos, float time, TweenType type = TweenType.Normal)
     {
         // assign infomation
@@ -91,9 +98,45 @@ public class TweenController : BaseControllerMono<TweenController>
         switch(action.type)
         {
             case TweenType.Normal:
-                action.target.position = Vector3.Lerp(action.start_pos, action.end_pos, percent);
+                action.target.position = action.start_pos + (action.end_pos-action.start_pos)*percent;
                 break;
-            case TweenType.Smooth:
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Change the size of object to target size in time
+    /// </summary>
+    /// <param name="transform">target object</param>
+    /// <param name="size">target size</param>
+    /// <param name="time">time limit</param>
+    /// <param name="type">animate type</param>
+    public void ChangeSizeTo(Transform transform, Vector3 scale, float time, TweenType type = TweenType.Normal)
+    {
+        // assign infomation
+        TweenAction action = GetTweenAction();
+        action.id = transform.gameObject.name;
+        action.target = transform;
+        action.start_pos = transform.localScale;
+        action.end_pos = scale;
+        action.current_time = 0;
+        action.total_time = time;
+        action.type = type;
+
+        // assign to dictionary
+        wait_list.Add(action, IChangeSizeTo);
+    }
+    private void IChangeSizeTo(TweenAction action)
+    {
+        float percent = action.current_time/action.total_time;
+        if(percent > 0.97)
+            percent = 1;
+
+        switch(action.type)
+        {
+            case TweenType.Normal:
+                action.target.localScale = action.start_pos + (action.end_pos-action.start_pos)*percent;
                 break;
             default:
                 break;
@@ -132,7 +175,7 @@ public class TweenController : BaseControllerMono<TweenController>
         public bool Finish()
         {
             current_time += Time.deltaTime;
-            return current_time >= total_time;
+            return current_time >= (total_time*1.1);
         }
 
         // the animation type of tween
