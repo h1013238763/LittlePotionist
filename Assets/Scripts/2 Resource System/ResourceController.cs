@@ -9,14 +9,14 @@ using UnityEngine.Events;
 public class ResourceController : BaseController<ResourceController>
 {
     /// <summary>
-    /// 同步加载资源
+    /// Load Resource
     /// </summary>
-    /// <param name="name">资源名称</param>
+    /// <param name="name">name of resource</param>
     public T Load<T>(string name) where T : Object
     {
         T res = Resources.Load<T>(name);
 
-        // 如果对象为GameObject, 实例化后返回该对象
+        // if it's a GameObject, instantiate and return it
         if( res is GameObject )
             return GameObject.Instantiate(res);
         else
@@ -24,10 +24,10 @@ public class ResourceController : BaseController<ResourceController>
     }
 
     /// <summary>
-    /// 异步加载资源
+    /// Load Resource Async
     /// </summary>
-    /// <param name="name">资源名称</param>
-    /// <param name="callback"> 资源使用函数 </param>
+    /// <param name="name">name of resource</param>
+    /// <param name="callback"> action after loading </param>
     /// <typeparam name="T"></typeparam>
     public void LoadAsync<T>(string name, UnityAction<T> callback) where T : Object
     {
@@ -35,10 +35,10 @@ public class ResourceController : BaseController<ResourceController>
     }
 
     /// <summary>
-    /// 携程函数
+    /// The Coroutine Function
     /// </summary>
-    /// <param name="name">资源名称</param>
-    /// <param name="callback"> 资源使用函数 </param>
+    /// <param name="name">name of resource</param>
+    /// <param name="callback"> action after loading </param>
     /// <returns></returns>
     private IEnumerator ILoadAsync<T>(string name, UnityAction<T> callback) where T : Object
     {

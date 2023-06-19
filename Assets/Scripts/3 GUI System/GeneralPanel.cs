@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class GeneralPanel : PanelBase
 {
-    private string current_slot = "";        // the index of current using quick slot
+    private int current_slot = -1;        // the index of current using quick slot
     private Dictionary<string, Vector3> button_pos = new Dictionary<string, Vector3>();
 
     protected override void Awake()
@@ -32,11 +32,14 @@ public class GeneralPanel : PanelBase
             GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerEnter, (data) => {OnPointerEnter((PointerEventData)data); });
             GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerExit,  (data) => {OnPointerExit ((PointerEventData)data); });
         }
+
+        if(!GUIController.GetController().panel_dic.ContainsKey("GeneralPanel"))
+            GUIController.GetController().panel_dic.Add("GeneralPanel", gameObject.GetComponent<GeneralPanel>());
     }
 
     public void Use()
     {
-        ItemController.GetController().UseItem(int.Parse(current_slot.Substring(11,1)));
+        ItemController.GetController().UseItem(current_slot);
     }
 
     /// <summary>
@@ -49,16 +52,20 @@ public class GeneralPanel : PanelBase
         if(!button_pos.ContainsKey(button_name))
             button_pos.Add(button_name, FindComponent<Button>(button_name).transform.position);
 
-        string temp_slot = current_slot;
+        
         // if click a quick slot
         if(button_name.IndexOf(" ") > 0)
         {   
-            current_slot = button_name;
+            string temp_curr = "QuickSlot (" + current_slot.ToString() + ")";
+            current_slot = int.Parse(button_name.Substring(11,1));
 
-            if(temp_slot != current_slot || temp_slot == "")    // move upward
+            if(temp_curr != button_name)
+            {   
+                // move upward
                 TweenController.GetController().MoveToPosition(FindComponent<Button>(button_name).transform, button_pos[button_name]+new Vector3(0, 10, 0), 0.07f);
-            if(temp_slot != "" && temp_slot != current_slot)    // move back to origin position
-                TweenController.GetController().MoveToPosition(FindComponent<Button>(temp_slot).transform, button_pos[temp_slot], 0.07f);   
+                if(button_pos.ContainsKey(temp_curr))    // move back to origin position
+                    TweenController.GetController().MoveToPosition(FindComponent<Button>(temp_curr).transform, button_pos[temp_curr], 0.07f); 
+            }              
         }
         else
         {
@@ -78,15 +85,28 @@ public class GeneralPanel : PanelBase
                 default:
                     break;
             }     
-        }    
+        }  
     }
 
     /// <summary>
     /// a interface for player controller to use and trigger
     /// </summary>
     /// <param name="button_name"></param>
-    public void ShortCutClick(string button_name)
+    public void ShortCutClick(int num, bool scroll)
     {
+        int temp_slot; 
+
+        if(scroll)
+            temp_slot = current_slot + num;
+        else
+            temp_slot = num;
+
+        if(temp_slot < 0)
+            temp_slot = 7;
+        else if(temp_slot > 7)
+            temp_slot = 0;
+
+        string button_name = "QuickSlot (" + temp_slot.ToString() + ")";
         OnClick(button_name);
     }
 
@@ -96,7 +116,8 @@ public class GeneralPanel : PanelBase
     private void OnPointerEnter(PointerEventData event_data)
     {
         string name = PointerEventHandle(event_data);
-        TweenController.GetController().MoveToPosition(FindComponent<Button>(name).transform, button_pos[name] + new Vector3(0, 5, 0), 0.07f);
+        if(name != "")
+            TweenController.GetController().MoveToPosition(FindComponent<Button>(name).transform, button_pos[name] + new Vector3(0, 5, 0), 0.07f);
     }
 
     /// <summary>
@@ -105,7 +126,8 @@ public class GeneralPanel : PanelBase
     private void OnPointerExit(PointerEventData event_data)
     {
         string name = PointerEventHandle(event_data);
-        TweenController.GetController().MoveToPosition(FindComponent<Button>(name).transform, button_pos[name], 0.07f);
+        if(name != "")
+            TweenController.GetController().MoveToPosition(FindComponent<Button>(name).transform, button_pos[name], 0.07f);
     }
 
     /// <summary>
@@ -118,8 +140,12 @@ public class GeneralPanel : PanelBase
 
         if(!button_pos.ContainsKey(name))
             button_pos.Add(name, FindComponent<Button>(name).transform.position);
-        if(name == current_slot)
-            return "";
+        if(name.IndexOf(" ") > 0)
+        {
+            if(name[11] == current_slot.ToString()[0])
+                return "";
+        }
+        
 
         return name;
     }

@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class GUIController : BaseController<GUIController>
 {
-    private Dictionary<string, PanelBase> panel_dic = new Dictionary<string, PanelBase>();
+    public Dictionary<string, PanelBase> panel_dic = new Dictionary<string, PanelBase>();
 
     public Transform canvas;
     private int canvas_layer_count = 0;

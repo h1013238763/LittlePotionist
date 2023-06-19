@@ -14,14 +14,18 @@ public class ItemController : BaseController<ItemController>
 
     public void Initial()
     {
-        Item temp_1 = new Item();
-        temp_1.item_id = "Potionist: Bed";
-        temp_1.item_name = "Bed";
-        temp_1.item_describe = "A nice bed";
-        temp_1.item_stack = 1;
-        temp_1.item_price = 100;
-        temp_1.item_usable = true;
-        item_dict.Add(temp_1.item_id, temp_1);
+        Item bed = new Item();
+        bed.item_id = "Potionist: Bed";
+        bed.item_name = "Bed";
+        bed.item_describe = "A nice bed";
+        bed.item_stack = 1;
+        bed.item_price = 100;
+        bed.item_usable = true;
+        bed.item_addition = new List<string>();
+        bed.item_addition.Add("2,1");
+        bed.item_addition.Add("true");
+        bed.item_addition.Add("true");
+        item_dict.Add(bed.item_id, bed);
 
         Item temp_2 = new Item();
         temp_2.item_id = "Potionist: Chair";
@@ -30,6 +34,7 @@ public class ItemController : BaseController<ItemController>
         temp_2.item_stack = 1;
         temp_2.item_price = 100;
         temp_2.item_usable = true;
+        temp_2.item_addition = new List<string>();
         item_dict.Add(temp_2.item_id, temp_2);
 
         Item temp_3 = new Item();
@@ -39,17 +44,13 @@ public class ItemController : BaseController<ItemController>
         temp_3.item_stack = 20;
         temp_3.item_price = 25;
         temp_3.item_usable = true;
+        temp_3.item_addition = new List<string>();
         item_dict.Add(temp_3.item_id, temp_3);
 
         XmlController.GetController().SaveData(item_dict, "PotionistItems", "Item/");
     }
 
     public XmlDictionary<string, StoreItem[]> GetInventInfo()
-    {
-        return invent_dict;
-    }
-
-    public XmlDictionary<string, StoreItem[]> InventData()
     {
         return invent_dict;
     }

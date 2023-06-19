@@ -10,45 +10,45 @@ using UnityEngine.SceneManagement;
 public class SceneController : BaseController<SceneController>
 {
     /// <summary>
-    /// 同步场景切换
+    /// Change Scene
     /// </summary>
-    /// <param name="name">场景名称</param>
-    /// <param name="fun">加载函数</param>
-    public void LoadScene(string name, UnityAction fun)
+    /// <param name="name">name of scene</param>
+    /// <param name="action">The action after finish loading</param>
+    public void LoadScene(string name, UnityAction action)
     {
-        // 同步加载场景
+
         SceneManager.LoadScene(name);
 
-        fun.Invoke();
+        action.Invoke();
     }
 
     /// <summary>
-    /// 异步场景切换
+    /// Change Scene Async
     /// </summary>
     /// <param name="name">场景名称</param>
     /// <param name="fun">加载函数</param>
-    public void LoadSceneAsync(string name, UnityAction fun)
+    public void LoadSceneAsync(string name, UnityAction action)
     {
-        MonoController.GetController().StartCoroutine(ILoadSceneAsync(name, fun));
+        MonoController.GetController().StartCoroutine(ILoadSceneAsync(name, action));
     }
 
     /// <summary>
-    /// 携程函数
+    /// The Coroutine function
     /// </summary>
     /// <param name="name"></param>
     /// <param name="fun"></param>
     /// <returns></returns>
-    private IEnumerator ILoadSceneAsync(string name, UnityAction fun)
+    private IEnumerator ILoadSceneAsync(string name, UnityAction action)
     {
-        AsyncOperation ao = SceneManager.LoadSceneAsync(name);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(name);
 
-        while(ao.isDone)
+        while(operation.isDone)
         {
-            EventController.GetController().EventTrigger("Refresh Progress", ao.progress);
-            yield return ao.progress;
+            EventController.GetController().EventTrigger("Refresh Progress", operation.progress);
+            yield return operation.progress;
         }
 
-        fun();
+        action();
     }
 
 }

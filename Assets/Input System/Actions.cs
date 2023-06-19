@@ -120,6 +120,15 @@ public partial class @Actions : IInputActionCollection2, IDisposable
             ""id"": ""08d1bea1-f683-41f4-a172-76d3f1ac5d42"",
             ""actions"": [
                 {
+                    ""name"": ""Remove"",
+                    ""type"": ""Button"",
+                    ""id"": ""0e1fd1dc-4264-4d31-9400-0d46481d2c1c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Use"",
                     ""type"": ""Button"",
                     ""id"": ""ddf9ca37-2421-43bd-a7e0-d64479b5bf7c"",
@@ -136,6 +145,24 @@ public partial class @Actions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SetQuickSlot"",
+                    ""type"": ""Button"",
+                    ""id"": ""6298f382-3e91-4ed2-9d17-755a1148a4de"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeQuickSlot"",
+                    ""type"": ""Value"",
+                    ""id"": ""51696581-a5ce-41cc-9f1f-49cf6a9dd69d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -158,6 +185,127 @@ public partial class @Actions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""74e7683e-1210-45f9-ba04-565171f84831"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Remove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7bbb9f37-0d9c-4010-87ba-a07de844bce8"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cddf430-891f-4f3d-97db-50a0446b0e6c"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2029d4a0-b874-4c53-ae21-03f688b33680"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c625cf3c-de56-4153-bd1c-962391ae957b"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e71f9556-dbf3-4746-8f93-9c685b97ebf4"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7da4fcfd-6f0e-4fb5-89bc-64c2705fc93d"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4d040adb-2b85-444e-9cd5-2305db41926e"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f9c8e3d-bec2-47f9-9fea-77b1df3d62f0"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""901c3d40-1cf3-47ab-99ed-0dc09a70f63d"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d3cab5b3-3878-4a39-b08f-b859b22a5a2c"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeQuickSlot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -289,8 +437,11 @@ public partial class @Actions : IInputActionCollection2, IDisposable
         m_General_Movement = m_General.FindAction("Movement", throwIfNotFound: true);
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
+        m_Player_Remove = m_Player.FindAction("Remove", throwIfNotFound: true);
         m_Player_Use = m_Player.FindAction("Use", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_SetQuickSlot = m_Player.FindAction("SetQuickSlot", throwIfNotFound: true);
+        m_Player_ChangeQuickSlot = m_Player.FindAction("ChangeQuickSlot", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
@@ -397,14 +548,20 @@ public partial class @Actions : IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
+    private readonly InputAction m_Player_Remove;
     private readonly InputAction m_Player_Use;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_SetQuickSlot;
+    private readonly InputAction m_Player_ChangeQuickSlot;
     public struct PlayerActions
     {
         private @Actions m_Wrapper;
         public PlayerActions(@Actions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Remove => m_Wrapper.m_Player_Remove;
         public InputAction @Use => m_Wrapper.m_Player_Use;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @SetQuickSlot => m_Wrapper.m_Player_SetQuickSlot;
+        public InputAction @ChangeQuickSlot => m_Wrapper.m_Player_ChangeQuickSlot;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -414,22 +571,40 @@ public partial class @Actions : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
+                @Remove.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemove;
+                @Remove.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemove;
+                @Remove.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemove;
                 @Use.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUse;
                 @Use.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUse;
                 @Use.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUse;
                 @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @SetQuickSlot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSetQuickSlot;
+                @SetQuickSlot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSetQuickSlot;
+                @SetQuickSlot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSetQuickSlot;
+                @ChangeQuickSlot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeQuickSlot;
+                @ChangeQuickSlot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeQuickSlot;
+                @ChangeQuickSlot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeQuickSlot;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @Remove.started += instance.OnRemove;
+                @Remove.performed += instance.OnRemove;
+                @Remove.canceled += instance.OnRemove;
                 @Use.started += instance.OnUse;
                 @Use.performed += instance.OnUse;
                 @Use.canceled += instance.OnUse;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @SetQuickSlot.started += instance.OnSetQuickSlot;
+                @SetQuickSlot.performed += instance.OnSetQuickSlot;
+                @SetQuickSlot.canceled += instance.OnSetQuickSlot;
+                @ChangeQuickSlot.started += instance.OnChangeQuickSlot;
+                @ChangeQuickSlot.performed += instance.OnChangeQuickSlot;
+                @ChangeQuickSlot.canceled += instance.OnChangeQuickSlot;
             }
         }
     }
@@ -552,8 +727,11 @@ public partial class @Actions : IInputActionCollection2, IDisposable
     }
     public interface IPlayerActions
     {
+        void OnRemove(InputAction.CallbackContext context);
         void OnUse(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnSetQuickSlot(InputAction.CallbackContext context);
+        void OnChangeQuickSlot(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

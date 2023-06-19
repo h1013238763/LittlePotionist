@@ -10,6 +10,7 @@ public class Item
     public int item_stack;
     public int item_price;
     public bool item_usable;
+    public List<string> item_addition;
 
     public virtual void UseEffect(){}
 

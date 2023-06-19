@@ -28,7 +28,7 @@ public class OverallController : BaseControllerMono<OverallController>
             saves[i] = XmlController.GetController().LoadData(typeof(SaveData), "savedata_"+i.ToString(), "Save/") as SaveData;
         }
 
-
+        
     }
 
     /// <summary>
@@ -56,13 +56,7 @@ public class OverallController : BaseControllerMono<OverallController>
 
     public void GameLoad()
     {
-        Item item = XmlController.GetController().LoadData(typeof(Item), "ItemData", "Item/") as Item;
-        Debug.Log(item);
-    }
-    
-    public void GameStart()
-    {
-
+        BuildController.GetController().Initial();
     }
 
     public void GameSave()
@@ -78,6 +72,7 @@ public class OverallController : BaseControllerMono<OverallController>
     public void CreateSave(int index, string name)
     {
         SaveData save_file = new SaveData(name);
+        saves[index] = save_file;
         XmlController.GetController().SaveData(save_file, "savedata_" + index.ToString(), "Save/");
     }
     
@@ -87,6 +82,7 @@ public class OverallController : BaseControllerMono<OverallController>
     /// <param name="index"></param>
     public void DeleteSave(int index)
     {
+        saves[index] = null;
         XmlController.GetController().DeleteData("savedata_" + index.ToString(), "Save/");
     }
 

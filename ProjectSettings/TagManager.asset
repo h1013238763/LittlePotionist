@@ -41,3 +41,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Daylight
+    uniqueID: 2185729191
+    locked: 0

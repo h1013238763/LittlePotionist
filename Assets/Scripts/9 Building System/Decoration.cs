@@ -1,29 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Decoration class
 /// the decorations that be placed in house
 /// </summary>
-public class Decoration
+public class Decoration : Item
 {
-    public int deco_id;
-    public string deco_name;
-    public string deco_describe;
-    public DecoType deco_type;
-    public int deco_price;
-    public string deco_call;        // the name of function to call while interacting
-}
-
-public enum DecoType
-{
-    Special,
-    Wallpaper,
-    Floor,
-    Furniture,
-    Device,
-    Farmland,
-    Carpet,
-    Wall
+    public Vector2Int deco_size;
+    public bool deco_usable;
+    public bool deco_collision;
+    public virtual void Action(string name){}
 }

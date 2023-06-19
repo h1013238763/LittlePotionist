@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -70,7 +71,11 @@ public class PlayerController : MonoBehaviour
         player_actions = new Actions();
 
         // Action Initial
+        player_actions.Player.ChangeQuickSlot.performed += ChangeQuickSlot;
+        player_actions.Player.SetQuickSlot.performed += SetQuickSlot;
+
         player_actions.Building.Interact.performed += Interact;
+
     }
 
     /// <summary>
@@ -131,6 +136,20 @@ public class PlayerController : MonoBehaviour
     private void Interact(InputAction.CallbackContext context)
     {
         
+    }
+
+    private void ChangeQuickSlot(InputAction.CallbackContext context)
+    {
+        if(context.control.ToString() == "Axis:/Mouse/scroll/up")
+            GUIController.GetController().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(-1, true);
+        else
+            GUIController.GetController().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(1, true);
+    }
+
+    private void SetQuickSlot(InputAction.CallbackContext context)
+    {
+        int index = int.Parse(context.control.ToString().Substring(context.control.ToString().Length-1));
+        GUIController.GetController().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(index-1, false);
     }
 
 

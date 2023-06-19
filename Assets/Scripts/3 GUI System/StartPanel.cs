@@ -22,7 +22,11 @@ public class StartPanel : PanelBase
 
     public void SaveSlotInitial()
     {   
+        Debug.Log("Inital");
         SaveData[] save_info = OverallController.GetController().GetSaveInfo();
+        
+        foreach (SaveData data in save_info)
+            Debug.Log(data);
 
         for(int i = 0; i < 3; i ++)
         {
@@ -56,7 +60,6 @@ public class StartPanel : PanelBase
                     FindComponent<Image>("CharacterCreate").transform.position = new Vector3(Screen.width/2f, Screen.height/2f, 0);
                     break;
                 case "DeleteButton":    // delete character
-                    Debug.Log("Delete" + save_slot_assign);
                     OverallController.GetController().DeleteSave(save_slot_assign);
                     SaveSlotInitial();
                     break;
