@@ -22,13 +22,17 @@ public class PanelBase : MonoBehaviour
         FindChildComponent<Slider>();
         FindChildComponent<ScrollRect>();
         FindChildComponent<InputField>();
+        FindChildComponent<Dropdown>();
     }
 
     public virtual void ShowSelf(){}
     public virtual void HideSelf(){}
 
-    protected virtual void OnClick(string button_name){}
-    protected virtual void OnValueChanged(string toggle_name, bool is_check){}
+    protected virtual void OnButtonClick(string button_name){}
+    protected virtual void OnSliderValueChanged(string Slider_name, float value){}
+    protected virtual void OnToggleValueChanged(string toggle_name, bool is_check){}
+    protected virtual void OnDropdownValueChanged(string drop_name, int value){}
+    
 
     /// <summary>
     /// Find Target Child Object
@@ -71,7 +75,31 @@ public class PanelBase : MonoBehaviour
             {
                 (ctrls[i] as Button).onClick.AddListener(() => 
                 {
-                    OnClick(temp);
+                    OnButtonClick(temp);
+                });
+            }
+            // Add Slider Listener
+            else if(ctrls[i] is Slider)
+            {
+                (ctrls[i] as Slider).onValueChanged.AddListener((value) =>
+                {
+                    OnSliderValueChanged(temp, value);
+                });
+            }
+            // Add Toggle Listener
+            else if(ctrls[i] is Toggle)
+            {
+                (ctrls[i] as Toggle).onValueChanged.AddListener((check) =>
+                {
+                    OnToggleValueChanged(temp, check);
+                });
+            }
+            // Add Dropdown Listener
+            else if(ctrls[i] is Dropdown)
+            {
+                (ctrls[i] as Dropdown).onValueChanged.AddListener((value) =>
+                {
+                    OnDropdownValueChanged(temp, value);
                 });
             }
         }

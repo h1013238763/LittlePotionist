@@ -31,7 +31,7 @@ public class ResourceController : BaseController<ResourceController>
     /// <typeparam name="T"></typeparam>
     public void LoadAsync<T>(string name, UnityAction<T> callback) where T : Object
     {
-        MonoController.GetController().StartCoroutine(ILoadAsync(name, callback));
+        MonoController.Controller().StartCoroutine(ILoadAsync(name, callback));
     }
 
     /// <summary>

@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class WorldController : BaseControllerMono<WorldController>
 {
-    private float time_radio;
+    private float total_day_time;
     private int hour_time;
     private int minute_time;
     private int day;
-    private int days_in_season;
     private int season;
     private int year;
 
     public void NextDay()
     {
-        hour_time = 6;
-        minute_time = 0;
+        // hour_time = 6;
+        // minute_time = 0;
         day ++;
-        if(day > days_in_season)
+        if(day > 28)
         {
             day = 1;
             season ++;
@@ -27,6 +26,33 @@ public class WorldController : BaseControllerMono<WorldController>
             season = 1;
             year ++;
         }
-        EventController.GetController().EventTrigger("World/NextDay");
+        EventController.Controller().EventTrigger("World/NextDay");
     }
+
+    public string TimeText(int year, TimeSeason season, int day)
+    {
+        string time_text = "";
+
+        time_text += "Year " + year.ToString();
+        time_text += " . " + season;
+        time_text += " . " + day;
+        if(day%10 == 1)
+            time_text += " st";
+        else if(day%10 == 2)
+            time_text += " nd";
+        else if(day%10 == 3)
+            time_text += " rd";
+        else
+            time_text += " th";
+
+        return time_text;
+    }
+}
+
+public enum TimeSeason
+{
+    Spring = 1,
+    Summer = 2,
+    Fall = 3,
+    Winter = 4
 }

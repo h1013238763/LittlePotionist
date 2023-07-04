@@ -14,18 +14,15 @@ public class BaseControllerMono<T> : MonoBehaviour where T : MonoBehaviour
     /// Find or create a gameobject with controller component and return the controller
     /// </summary>
     /// <returns> the controller</returns>
-    public static T GetController()
+    public static T Controller()
     {
         if(controller == null)
         {
             GameObject obj = GameObject.Find("MonoController");
             if(obj == null)
-            {
-                Debug.Log("Creating");
                 obj = new GameObject("MonoController");
-                GameObject.DontDestroyOnLoad(obj);
-            }
-
+            GameObject.DontDestroyOnLoad(obj);
+            
             controller = obj.GetComponent<T>();
             if(controller == null)
                 controller = obj.AddComponent<T>();            

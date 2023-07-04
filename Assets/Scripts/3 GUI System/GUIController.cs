@@ -19,14 +19,16 @@ public class GUIController : BaseController<GUIController>
         // Create Canvas Object
         GameObject temp_canvas = GameObject.Find("Canvas");
         if(temp_canvas == null)
-            ResourceController.GetController().Load<GameObject>("GUI/General/Canvas");
+            temp_canvas = ResourceController.Controller().Load<GameObject>("GUI/General/Canvas");
+        temp_canvas.name = "Canvas";
         canvas = temp_canvas.transform;
         GameObject.DontDestroyOnLoad(temp_canvas);
         
         // Create Event Listener
         GameObject temp_event = GameObject.Find("EventSystem");
         if(temp_event == null)
-            temp_event = ResourceController.GetController().Load<GameObject>("GUI/General/EventSystem");
+            temp_event = ResourceController.Controller().Load<GameObject>("GUI/General/EventSystem");
+        temp_event.name = "EventSystem";
         GameObject.DontDestroyOnLoad(temp_event);
 
         foreach( Transform child in canvas)
@@ -57,9 +59,8 @@ public class GUIController : BaseController<GUIController>
         }
 
         // LoadAsync panel, set layer and position
-        ResourceController.GetController().LoadAsync<GameObject>("GUI/Panels/" + panel_name, (obj) =>
+        ResourceController.Controller().LoadAsync<GameObject>("GUI/Panels/" + panel_name, (obj) =>
         {
-            
             obj.transform.SetParent(canvas.GetChild(layer));
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = new Vector3(1, 1, 1);
@@ -72,7 +73,7 @@ public class GUIController : BaseController<GUIController>
             // invoke he call back event
             if(callback != null)
                 callback(panel);
-            panel.ShowSelf();            
+            panel.ShowSelf();
             panel_dic.Add(panel_name, panel);
         });
     }
@@ -82,6 +83,16 @@ public class GUIController : BaseController<GUIController>
     /// </summary>
     /// <param name="panel_name">the name of panel</param>
     public void HidePanel(string panel_name)
+    {
+        if(panel_dic.ContainsKey(panel_name))
+            panel_dic[panel_name].HideSelf();
+    }
+
+    /// <summary>
+    /// Remove Panel from scene
+    /// </summary>
+    /// <param name="panel_name">the name of panel</param>
+    public void RemovePanel(string panel_name)
     {
         if(panel_dic.ContainsKey(panel_name))
         {

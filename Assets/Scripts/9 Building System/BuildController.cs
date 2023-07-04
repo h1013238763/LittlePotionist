@@ -41,13 +41,13 @@ public class BuildController : BaseController<BuildController>
         if( deco is DecoStorage)
         {
             temp.name += "|" +pos.x.ToString()+","+pos.y.ToString();
-            ItemController.GetController().AddInvent(temp.name, (deco as DecoStorage).storage_size);
+            ItemController.Controller().AddInvent(temp.name, (deco as DecoStorage).storage_size);
         }
 
         // Add Component to it
         // Sprite Renderer
         temp.AddComponent<SpriteRenderer>();
-        temp.GetComponent<SpriteRenderer>().sprite = ResourceController.GetController().Load<Sprite>(deco.item_id + "_" + direct.ToString());
+        temp.GetComponent<SpriteRenderer>().sprite = ResourceController.Controller().Load<Sprite>(deco.item_id + "_" + direct.ToString());
 
         // MonoDeco
         MonoDeco deco_info = temp.AddComponent<MonoDeco>();

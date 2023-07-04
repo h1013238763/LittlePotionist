@@ -14,41 +14,41 @@ public class SceneController : BaseController<SceneController>
     /// </summary>
     /// <param name="name">name of scene</param>
     /// <param name="action">The action after finish loading</param>
-    public void LoadScene(string name, UnityAction action)
+    public void LoadScene(string name, UnityAction action = null)
     {
-
         SceneManager.LoadScene(name);
 
-        action.Invoke();
+        if(action != null)
+            action.Invoke();
     }
 
     /// <summary>
     /// Change Scene Async
     /// </summary>
-    /// <param name="name">场景名称</param>
-    /// <param name="fun">加载函数</param>
-    public void LoadSceneAsync(string name, UnityAction action)
+    /// <param name="name">name of scene</param>
+    /// <param name="action">The action after finish loading</param>
+    public void LoadSceneAsync(string name, UnityAction action = null)
     {
-        MonoController.GetController().StartCoroutine(ILoadSceneAsync(name, action));
+        MonoController.Controller().StartCoroutine(ILoadSceneAsync(name, action));
     }
 
     /// <summary>
     /// The Coroutine function
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="fun"></param>
+    /// <param name="name">name of scene</param>
+    /// <param name="action">The action after finish loading</param>
     /// <returns></returns>
-    private IEnumerator ILoadSceneAsync(string name, UnityAction action)
+    private IEnumerator ILoadSceneAsync(string name, UnityAction action = null)
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync(name);
 
         while(operation.isDone)
         {
-            EventController.GetController().EventTrigger("Refresh Progress", operation.progress);
+            EventController.Controller().EventTrigger("Refresh Progress", operation.progress);
             yield return operation.progress;
         }
 
-        action();
+        if(action != null)
+            action();
     }
-
 }

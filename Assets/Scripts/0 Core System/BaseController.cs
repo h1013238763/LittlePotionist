@@ -14,7 +14,7 @@ public class BaseController<T> where T: new()
     /// Define and return a unique static controller
     /// </summary>
     /// <returns>The controller</returns>
-    public static T GetController()
+    public static T Controller()
     {
         if(controller == null)
             controller = new T();

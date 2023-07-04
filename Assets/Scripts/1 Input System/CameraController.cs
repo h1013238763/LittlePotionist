@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
         camera_func.Invoke();
     }
 
-    public static CameraController GetController()
+    public static CameraController Controller()
     {
         if(controller == null)
             controller = GameObject.Find("Main Camera").GetComponent<CameraController>();
@@ -48,7 +48,7 @@ public class CameraController : MonoBehaviour
         switch (id)
         {
             case 0: // follow the player
-                target = PlayerController.GetController().player;
+                target = PlayerController.Controller().player;
                 camera_func = Follow;
                 break;
             default:

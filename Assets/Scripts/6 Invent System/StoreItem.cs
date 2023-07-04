@@ -24,4 +24,9 @@ public class StoreItem
         item_id = id;
         item_num = num;
     }
+
+    public override string ToString()
+    {
+        return "StoreItem[ id=" +item_id+ ", num=" +item_num+ " ]";
+    }
 }

@@ -43,19 +43,27 @@ public class XmlController : BaseController<XmlController>
     /// <returns></returns>
     public object LoadData(Type type, string file_name, string dir = "")
     {
-        // try to find file in two paths
-        string path = Application.persistentDataPath + "/" + dir + file_name + ".xml";
-        if(!File.Exists(path))
-            path = Application.streamingAssetsPath + "/" + dir + file_name + ".xml";
-        if(!File.Exists(path))
-            return null;  // return a default file if not found
+        try{
+            // try to find file in two paths
+            string path = Application.persistentDataPath + "/" + dir + file_name + ".xml";
+            if(!File.Exists(path))
+                path = Application.streamingAssetsPath + "/" + dir + file_name + ".xml";
+            if(!File.Exists(path))
+                return null;  // return a default file if not found
 
-        // // create a reader and deserialize
-        using (StreamReader reader = new StreamReader(path))
-        {
-            XmlSerializer s = new XmlSerializer(type);
-            return s.Deserialize(reader);
+            // create a reader and deserialize
+            using (StreamReader reader = new StreamReader(path))
+            {
+                XmlSerializer s = new XmlSerializer(type);
+                return s.Deserialize(reader);
+            }
         }
+        catch(Exception e)
+        {
+            ExceptionController.Controller().ReceiveException("XmlController.LoadData()", e);
+            return null;
+        }
+        
     }
 
     /// <summary>

@@ -5,4 +5,9 @@ using UnityEngine;
 public class DecoStorage : Decoration
 {
     public int storage_size;
+
+    private void PanelAction()
+    {
+        
+    }
 }

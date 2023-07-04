@@ -2,48 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 public class LoadingPanel : PanelBase
 {
     private Transform mask;
-    private UnityAction next_action;
 
     public override void ShowSelf()
     {   
-        // trigger animation
+        // initial
         mask = FindComponent<Image>("Mask").transform;
-        TweenController.GetController().ChangeSizeTo(mask, new Vector3(0, 0, 0), 0.5f);        
-    }
 
+        // start performing
+        TweenController.Controller().ChangeSizeTo(mask, new Vector3(0, 0, 0), 0.5f);
+        // collect previous scene garbage
+        MemoryController.Controller().ForceCollectGarbageAsync(1000000000);
+        MonoController.Controller().StartCoroutine(ActAfterSeconds(0.5f, false));
+    }
+    
     public override void HideSelf()
     {
-        TweenController.GetController().ChangeSizeTo(mask, new Vector3(1, 1, 0), 0.5f);
-        MonoController.GetController().StartCoroutine(WaitForAnimation(0.5f, false));
+        TweenController.Controller().ChangeSizeTo(mask, new Vector3(1, 1, 0), 0.5f);
+        MonoController.Controller().StartCoroutine(ActAfterSeconds(1, true));
     }
 
-    public void AssignAction(UnityAction action)
+    private IEnumerator ActAfterSeconds(float seconds, bool remove)
     {
-        next_action = action;
-        MonoController.GetController().StartCoroutine(WaitForAnimation(0.5f, true)); 
-    }
+        yield return new WaitForSeconds(seconds);
 
-    private IEnumerator WaitForAnimation(float second, bool show_stage)
-    {
-        // finish wait for animation
-        yield return new WaitForSeconds(second * 1.15f);
-
-        // invoke loading action
-        if(show_stage)
+        if(remove)
         {
-            if(next_action != null)
-                next_action.Invoke();
-            HideSelf();
+            EventController.Controller().RemoveEventKey("LoadingAnimeFinish");
+            GUIController.Controller().RemovePanel("LoadingPanel");
         }
         else
-        {
-            next_action = null;
-            GUIController.GetController().HidePanel("LoadingPanel");
-        }
+            EventController.Controller().EventTrigger("LoadingAnimeFinish");
     }
 }

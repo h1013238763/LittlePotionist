@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Tween Controller module
 /// </summary>
-public class TweenController : BaseControllerMono<TweenController>
+public class TweenController : BaseController<TweenController>
 {   
     private Dictionary<string, TweenAction>              info_list   = new Dictionary<string, TweenAction>();
     private Dictionary<string, UnityAction<TweenAction>> action_list = new Dictionary<string, UnityAction<TweenAction>>();
@@ -17,9 +18,9 @@ public class TweenController : BaseControllerMono<TweenController>
 
     private List<TweenAction> tween_pool = new List<TweenAction>();
 
-    void Update()
+    public TweenController()
     {
-        Animating();
+        MonoController.Controller().AddUpdateListener(Animating);
     }
 
     /// <summary>
@@ -33,7 +34,15 @@ public class TweenController : BaseControllerMono<TweenController>
             // assign infomation
             TweenAction current_action = pair.Value; 
             // use infomation for animating
-            action_list[current_action.id].Invoke(current_action);
+            try
+            {
+                action_list[current_action.id].Invoke(current_action);
+            }
+            catch(Exception e)
+            {
+                ExceptionController.Controller().ReceiveException("TweenController.Animating", e);
+                remove_action.Add(current_action);
+            }
             // check if animation finished and remove animation
             if(current_action.Finish())
                 remove_action.Add(current_action);
@@ -130,7 +139,7 @@ public class TweenController : BaseControllerMono<TweenController>
     private void IChangeSizeTo(TweenAction action)
     {
         float percent = action.current_time/action.total_time;
-        if(percent > 0.97)
+        if(percent > 1)
             percent = 1;
 
         switch(action.type)

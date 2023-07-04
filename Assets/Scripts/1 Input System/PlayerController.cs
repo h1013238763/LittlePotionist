@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
     public PlayerActionMode action_mode;// current player action mode
     public float player_move;           // player move speed
 
+    // Player Interaction Varible
+    public string current_storage;      // the storage which player currently interacting with
+    
+
     void Awake()
     {
         Initial();
@@ -51,7 +55,7 @@ public class PlayerController : MonoBehaviour
         SetActionMap(PlayerActionMode.End);
     }
 
-    public static PlayerController GetController()
+    public static PlayerController Controller()
     {
         if(controller == null)
             controller = GameObject.Find("Player").GetComponent<PlayerController>();
@@ -63,9 +67,9 @@ public class PlayerController : MonoBehaviour
         // Assign Component
         player = GameObject.Find("Player");
         if(player == null)
-            player = ResourceController.GetController().Load<GameObject>("General/Player");
+            player = ResourceController.Controller().Load<GameObject>("General/Player");
 
-        ItemController.GetController().AddInvent("Player", 35);
+        ItemController.Controller().AddInvent("Player", 35);
 
         player_rigid = player.GetComponent<Rigidbody2D>();
         player_actions = new Actions();
@@ -141,15 +145,15 @@ public class PlayerController : MonoBehaviour
     private void ChangeQuickSlot(InputAction.CallbackContext context)
     {
         if(context.control.ToString() == "Axis:/Mouse/scroll/up")
-            GUIController.GetController().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(-1, true);
+            GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(-1, true);
         else
-            GUIController.GetController().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(1, true);
+            GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(1, true);
     }
 
     private void SetQuickSlot(InputAction.CallbackContext context)
     {
         int index = int.Parse(context.control.ToString().Substring(context.control.ToString().Length-1));
-        GUIController.GetController().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(index-1, false);
+        GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(index-1, false);
     }
 
 

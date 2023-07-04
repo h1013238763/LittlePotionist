@@ -9,81 +9,104 @@ using UnityEngine.Events;
 public class PoolController : BaseController<PoolController>
 {
     private GameObject dictionary_obj;
-    // 对象池总辞典
+    private GameObject world_obj;
+    private GameObject pool_obj;
+    // Dictionary of object pool
     public Dictionary<string, PoolData> dictionary_pool = new Dictionary<string, PoolData>();
 
     /// <summary>
-    /// 从对象池中异步获取一个对应对象
+    /// Initial pool controller objects
     /// </summary>
-    /// <param name="name">对象名称</param>
-    /// <returns>获取到的对象</returns>
-    public void GetObject(string name, UnityAction<GameObject> callback)
+    private void Initial()
     {
         if(dictionary_obj == null)
-            dictionary_obj = new GameObject("Pool Manager");
+        {
+            dictionary_obj = new GameObject("Pool Controller");
+            world_obj = new GameObject("World Objects");
+            world_obj.transform.SetParent(dictionary_obj.transform);
+            pool_obj = new GameObject("Pool Objects");
+            pool_obj.transform.SetParent(dictionary_obj.transform);
+        }
+    }
 
-        // 查找和创建对象池
+    /// <summary>
+    /// get a object async from object pool
+    /// </summary>
+    /// <param name="name">name of object</param>
+    public void GetObject(string name, UnityAction<GameObject> callback)
+    {
+        Initial();
+
+        // Create and search object pool
         if(!dictionary_pool.ContainsKey(name))
-            dictionary_pool.Add(name, new PoolData(dictionary_obj, name));
+            dictionary_pool.Add(name, new PoolData(pool_obj, name));
 
-        // 激活并返回对象
+        // active and callback object
         if(dictionary_pool[name].pool_list.Count > 0)
         {
-            callback(dictionary_pool[name].GetObj());
+            GameObject temp = dictionary_pool[name].GetObj();
+            temp.transform.SetParent(world_obj.transform);
+            callback(temp);
         }
         else
         {
-            ResourceController.GetController().LoadAsync<GameObject>(name, (o) =>
+            ResourceController.Controller().LoadAsync<GameObject>(name, (o) =>
             {
                 o.name = name;
+                o.transform.SetParent(world_obj.transform);
                 callback(o);
             });
         } 
     }
 
     /// <summary>
-    /// 从对象池中同步获取一个对应对象
+    /// get a object from object pool
     /// </summary>
-    /// <param name="name">对象名称</param>
+    /// <param name="name">name of object</param>
+    /// <returns>target object</returns>
     public GameObject GetObject(string name)
     {
-        if(dictionary_obj == null)
-            dictionary_obj = new GameObject("Pool Manager");
+        Initial();
 
-        // 查找和创建对象池
+        // Create and search object pool
         if(!dictionary_pool.ContainsKey(name))
-            dictionary_pool.Add(name, new PoolData(dictionary_obj, name));
+            dictionary_pool.Add(name, new PoolData(pool_obj, name));
 
+        GameObject temp;
         if( dictionary_pool[name].pool_list.Count > 0 )
         {
-            return dictionary_pool[name].GetObj();
+            temp = dictionary_pool[name].GetObj();
         }
         else
         {
-            return new GameObject(name);
+            temp = new GameObject(name);
         }
+        
+        temp.transform.SetParent(world_obj.transform);
+        return temp;
+
     }
 
     /// <summary>
-    /// 将一个对象放回至物品池中
+    /// push a object back to object pool
     /// </summary>
-    /// <param name="name">对象名称</param>
-    /// <param name="obj">返回的对象</param>
+    /// <param name="name">name of object</param>
+    /// <param name="obj">target object</param>
     public void PushObject(string name, GameObject obj)
     {
-        // 失活对象
+        // deactive object
         obj.SetActive(false);
 
-        // 将对象数据存放到对象池中
+        // push it back to pool
         dictionary_pool[name].PushObj(obj);
     }
 
     /// <summary>
-    /// 清空对象池
+    /// clear object pool
     /// </summary>
     public void Clear(){
         dictionary_pool.Clear();
-        dictionary_obj = null;
+        GameObject.Destroy(dictionary_obj);
     }
 
 }
@@ -111,10 +134,10 @@ public class PoolData
     }
 
     /// <summary>
-    /// 将一个对象放回至物品池中
+    /// push a object back to object pool
     /// </summary>
-    /// <param name="name">对象名称</param>
-    /// <param name="obj">返回的对象</param>
+    /// <param name="name">name of object</param>
+    /// <param name="obj">target object</param>
     public void PushObj(GameObject obj)
     {
         pool_list.Add(obj);
@@ -122,9 +145,9 @@ public class PoolData
     }
 
     /// <summary>
-    /// 从对象池中获取一个对应对象
+    /// get a object from object pool
     /// </summary>
-    /// <returns>获取到的对象</returns>
+    /// <returns>target object</returns>
     public GameObject GetObj()
     {
         GameObject obj = obj = pool_list[0];

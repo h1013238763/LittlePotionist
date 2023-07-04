@@ -6,11 +6,13 @@ public class Item
 {
     public string item_id;
     public string item_name;
-    public string item_describe;
+    public Sprite item_sprite;
+    [TextArea]public string item_describe;
     public int item_stack;
     public int item_price;
     public bool item_usable;
-    public List<string> item_addition;
+    public ItemType item_type;
+    public List<string> item_info;
 
     public virtual void UseEffect(){}
 
@@ -18,4 +20,15 @@ public class Item
     {
         return "Item[ id="+item_id+" ]";
     }
+}
+
+public enum ItemType
+{
+    Material,
+    Seed,
+    Tool,
+    Herb,
+    Potion,
+    Device,
+    Furniture
 }
