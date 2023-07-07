@@ -16,9 +16,11 @@ public class ItemController : BaseController<ItemController>
     /// <summary>
     /// Initial the Item Dictionary
     /// </summary>
-    public void InitialItemDict()
+    public void InitialItemDict(XmlDictionary<string, Item> items)
     {
-        item_dict = XmlController.Controller().LoadData(typeof(XmlDictionary<string, Item>), "PotionistItems", "Data/Items/") as XmlDictionary<string, Item>;
+        item_dict = items;
+        foreach(var item in item_dict)
+            Debug.Log(item);
     }
 
     public void InitialInvent(XmlDictionary<string, StoreItem[]> info)

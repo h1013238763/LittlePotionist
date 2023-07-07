@@ -86,7 +86,6 @@ public class BottomPanel : PanelBase
         {
             // character panel action
             case "CharacterPanel":
-                ItemController.Controller().TempTest();
                 ItemController.Controller().CreateDropItem("Potionist@Seed", 1, new Vector3(1, 1, 0));
                 break;
             // inventory panel action

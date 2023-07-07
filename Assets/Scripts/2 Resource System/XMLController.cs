@@ -60,6 +60,7 @@ public class XmlController : BaseController<XmlController>
         }
         catch(Exception e)
         {
+            Debug.LogException(e);
             ExceptionController.Controller().ReceiveException("XmlController.LoadData()", e);
             return null;
         }

@@ -7,12 +7,12 @@ public class Item
     public string item_id;
     public string item_name;
     public Sprite item_sprite;
-    [TextArea]public string item_describe;
+    public string item_describe;
     public int item_stack;
     public int item_price;
     public bool item_usable;
     public ItemType item_type;
-    public List<string> item_info;
+    public string item_info;
 
     public virtual void UseEffect(){}
 

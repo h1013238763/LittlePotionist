@@ -36,7 +36,14 @@ public class OverallController : BaseControllerMono<OverallController>
         // Start initial game datas
         EventController.Controller().AddEventListener("LoadingAnimeFinish", new SceneEvents().EnterStartScene);
         GUIController.Controller().ShowPanel<LoadingPanel>("LoadingPanel", 3);
-        // ItemController.Controller().InitialItemDict()
+        
+        // initial item information
+        ItemInitial();
+        // initial player infomation
+
+        // initial scene objects
+
+        // initial item stored in scene objects
     }
 
     public void GameLoad()
@@ -89,6 +96,70 @@ public class OverallController : BaseControllerMono<OverallController>
 
         // start changing
         GUIController.Controller().ShowPanel<LoadingPanel>("LoadingPanel", 3);
+    }
+
+    private void ItemInitial()
+    {
+        // read item file
+        XmlDictionary<string, Item> items = new XmlDictionary<string, Item>();
+        List<Item> item_list = XmlController.Controller().LoadData(typeof(List<Item>), "PotionistItems", "Data/Items/") as List<Item>;
+        List<string> token;
+
+        // handle each item in file
+        foreach(Item item in item_list)
+        {
+            token = GetNextToken(item);
+            switch(item.item_type)
+            {
+                case ItemType.Furniture:
+                    Furniture temp_furniture = new Furniture(item);
+                    // furniture.furn_size
+                    temp_furniture.furn_size = new Vector2Int(
+                        int.Parse(token[0].Substring(0, token[0].IndexOf(","))),
+                        int.Parse(token[0].Substring(token[0].IndexOf(",")+1))
+                    );
+                    // furniture.furn_interact
+                    temp_furniture.furn_interact = (token[1] == "true");
+                    // furniture.furn_collision
+                    temp_furniture.furn_collision = (token[2] == "true");
+                    // furniture. BuildController.FurnitureType furn_type;
+                    temp_furniture.furn_type = (BuildController.FurnitureType)int.Parse(token[3]);
+                    // furniture BuildController.BuildType furn_build_type;
+                    temp_furniture.furn_build_type = (BuildController.BuildType)int.Parse(token[4]);
+
+                    // save into items
+                    items.Add(temp_furniture.item_id, temp_furniture);
+                    break;
+                default:
+                    items.Add(item.item_id, item);
+                    break;
+            }
+        }
+        ItemController.Controller().InitialItemDict(items);
+    }
+
+    /// <summary>
+    /// break the string line into tokens
+    /// </summary>
+    /// <param name="line"></param>
+    /// <returns></returns>
+    private List<string> GetNextToken(Item item)
+    {
+        List<string> tokens = new List<string>();
+
+        // split line into token till the last token
+        while(item.item_info.IndexOf(" ") < item.item_info.Length-1 && item.item_info.IndexOf(" ") > 0)
+        {
+            tokens.Add(item.item_info.Substring(0, item.item_info.IndexOf(" ")));
+            item.item_info = item.item_info.Substring(item.item_info.IndexOf(" ")+1);
+        }
+        // handle last token
+        if(item.item_info != null)
+        {
+            tokens.Add(item.item_info.Substring(0));
+            item.item_info = null;
+        }
+        return tokens;
     }
 }
 

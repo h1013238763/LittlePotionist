@@ -48,20 +48,22 @@ public class BuildController : BaseController<BuildController>
 
     public enum BuildType
     {
-        Floor,
-        Wall,
-        Ground,
-        Decoration
+        Floor = 0,
+        Wall = 1,
+        Ground = 2,
+        Decoration = 3
     }
 
     public enum FurnitureType
     {
-        Carpet,
-        Mural,
-        Chair,
-        Table,
-        Storage,
-        Shelf,
-        Bed
+        Carpet = 0,
+        Mural = 1,
+        Window = 2,
+        Light = 3,
+        Chair = 4,
+        Table = 5,
+        Storage = 6,
+        Shelf = 7,
+        Bed = 8
     }
 }
