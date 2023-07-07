@@ -75,8 +75,12 @@ public class PlayerController : MonoBehaviour
         player_actions = new Actions();
 
         // Action Initial
+        // Player map
         player_actions.Player.ChangeQuickSlot.performed += ChangeQuickSlot;
         player_actions.Player.SetQuickSlot.performed += SetQuickSlot;
+
+        // UI map
+        player_actions.UI.Inventory.performed += Inventory;
 
         player_actions.Building.Interact.performed += Interact;
 
@@ -93,6 +97,7 @@ public class PlayerController : MonoBehaviour
             case PlayerActionMode.Normal:
                 player_actions.General.Enable();
                 player_actions.Player.Enable();
+                player_actions.UI.Enable();
                 player_actions.Building.Disable();
                 break;
             case PlayerActionMode.Building:
@@ -142,18 +147,22 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    // UI/Inventory shortcut
+    private void Inventory(InputAction.CallbackContext context)
+    {
+        GUIController.Controller().GetPanel<BottomPanel>("BottomPanel").KeyboardInput("InventoryPanel");
+    }
+
     private void ChangeQuickSlot(InputAction.CallbackContext context)
     {
-        if(context.control.ToString() == "Axis:/Mouse/scroll/up")
-            GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(-1, true);
-        else
-            GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(1, true);
+        GUIController.Controller().GetPanel<BottomPanel>("BottomPanel").KeyboardInput(context.control.ToString());
     }
 
     private void SetQuickSlot(InputAction.CallbackContext context)
     {
         int index = int.Parse(context.control.ToString().Substring(context.control.ToString().Length-1));
-        GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").ShortCutClick(index-1, false);
+
+        GUIController.Controller().GetPanel<BottomPanel>("BottomPanel").KeyboardInput("Slot ("+(index-1).ToString()+")");
     }
 
 

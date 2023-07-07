@@ -29,6 +29,5 @@ public enum ItemType
     Tool,
     Herb,
     Potion,
-    Device,
     Furniture
 }

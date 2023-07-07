@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 
 public class InventoryPanel : PanelBase
 {
-    StoreItem pointer_item;
-    string current_storage;
+    Item pointer_item;
+    public string storage_name;
 
     public override void ShowSelf()
     {   
@@ -15,13 +15,38 @@ public class InventoryPanel : PanelBase
 
         for(int i = 0; i < ctrls.Length; i++)
         {
-            {
-                GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerEnter, (data) => {OnPointerEnter((PointerEventData)data); });
-                GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerExit,  (data) => {OnPointerExit ((PointerEventData)data); });
-                GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerClick, (data) => {OnPointerClick ((PointerEventData)data); });
-            }
+            GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerClick, (data) => {OnPointerClick((PointerEventData)data); });
+            GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerEnter, (data) => {OnPointerEnter((PointerEventData)data); });
+            GUIController.AddCustomEventListener(ctrls[i], EventTriggerType.PointerExit,  (data) => {OnPointerExit ((PointerEventData)data); });
         }
+
+        if(storage_name == "Player")
+        {
+            FindComponent<Image>("PointerItem").gameObject.SetActive(false);
+            GUIController.Controller().GetPanel<BottomPanel>("BottomPanel").invent_open = true;
+        }
+        else
+        {
+            GUIController.Controller().ShowPanel<InventoryPanel>("InventoryPanel", 2, (p) =>
+            {
+                p.storage_name = "Player";
+            });
+        }
+
+        EventController.Controller().AddEventListener("ItemController/ItemChange", Refresh);
+
         Refresh();
+    }
+
+    public override void HideSelf()
+    {
+        if(storage_name == "Player")
+        {
+            GUIController.Controller().GetPanel<BottomPanel>("BottomPanel").invent_open = false;
+            GUIController.Controller().RemovePanel("StoragePanel");
+        }
+
+        GUIController.Controller().RemovePanel(gameObject.name);
     }
 
     /// <summary>
@@ -29,8 +54,9 @@ public class InventoryPanel : PanelBase
     /// </summary>
     public void Refresh()
     {
-        StoreItem[] invent = ItemController.Controller().GetInvent(current_storage);     
+        StoreItem[] invent = ItemController.Controller().GetInvent(storage_name);     
 
+        // set all slot items
         for(int i = 0; i < invent.Length; i ++)
         {
             Transform slot = FindComponent<Button>("Slot (" + i + ")").transform;
@@ -52,11 +78,26 @@ public class InventoryPanel : PanelBase
                 slot.GetChild(1).gameObject.GetComponent<Text>().text = invent[i].item_num.ToString();
             }
         }
+
+        // set hold item image
+        if(storage_name == "Player")
+        {
+            StoreItem item = ItemController.Controller().hold_item;
+            if(item == null)
+                return;
+            if(item.item_num > 0)
+                FindComponent<Image>("PointerItem").sprite = ItemController.Controller().GetItemSprite(item.item_id);
+        }   
     }
 
-    public void SetStorage(string name)
+    /// <summary>
+    /// Transfer item
+    /// </summary>
+    /// <param name="event_data"></param>
+    private void OnPointerClick(PointerEventData event_data)
     {
-        current_storage = name;
+        int index = GetPointerObjectIndex(event_data);
+        ItemController.Controller().TransferItem(storage_name, index, event_data.button == PointerEventData.InputButton.Left);
     }
 
     /// <summary>
@@ -69,12 +110,14 @@ public class InventoryPanel : PanelBase
         if(index < 0)
             return;
         
-        pointer_item = ItemController.Controller().GetInvent("Player")[index];
-        if(pointer_item == null)
-            return;
-
-        GUIController.Controller().ShowPanel<ItemDetailPanel>("ItemDetailPanel", 3);
-        GUIController.Controller().GetPanel<ItemDetailPanel>("ItemDetailPanel").SetItem(pointer_item.item_id);
+        pointer_item = ItemController.Controller().GetItemInfo(storage_name, index);
+        if(pointer_item != null)
+        {
+            GUIController.Controller().ShowPanel<ItemDetailPanel>("ItemDetailPanel", 3, (p) =>
+            {
+                p.SetItem(pointer_item.item_id);
+            });
+        }
     }
 
     /// <summary>
@@ -85,27 +128,6 @@ public class InventoryPanel : PanelBase
     {
         pointer_item = null;
         GUIController.Controller().HidePanel("ItemDetailPanel");
-    }
-
-    // TODO: Fix InventoryPanel make it able to use by other storage
-    /// <summary>
-    /// quick move item to quick slot or another invent when mouse right click
-    /// </summary>
-    /// <param name="event_data">pointer data</param>
-    private void OnPointerClick(PointerEventData event_data)
-    {
-        int index = GetPointerObjectIndex(event_data);
-        if(index < 0)
-            return;
-
-        if(event_data.button == PointerEventData.InputButton.Right )
-        {
-            InventoryPanel storage = GUIController.Controller().GetPanel<InventoryPanel>("StoragePanel");
-            if( storage == null)
-                ItemController.Controller().TransferItem("Player", "QuickSlot", index);
-            else
-                ItemController.Controller().TransferItem("Player", "Storage", index);
-        }
     }
 
     /// <summary>

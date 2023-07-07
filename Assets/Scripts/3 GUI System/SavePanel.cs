@@ -107,8 +107,8 @@ public class SavePanel : PanelBase
                 save_info.GetChild(0).GetComponent<Text>().text = saves[i].save_name;
 
                 // set save time
-                save_info.GetChild(1).GetComponent<Text>().text = 
-                    WorldController.Controller().TimeText(saves[i].save_year, saves[i].save_season, saves[i].save_day);
+                WorldController.Controller().SetDate(saves[i].save_year, saves[i].save_season, saves[i].save_day);
+                save_info.GetChild(1).GetComponent<Text>().text = WorldController.Controller().GetDateText();
 
                 // set visibility
                 current_slot.GetChild(0).gameObject.SetActive(true);

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldController : BaseControllerMono<WorldController>
+public class WorldController : BaseController<WorldController>
 {
     private float total_day_time;
     private int hour_time;
@@ -29,7 +29,14 @@ public class WorldController : BaseControllerMono<WorldController>
         EventController.Controller().EventTrigger("World/NextDay");
     }
 
-    public string TimeText(int year, TimeSeason season, int day)
+    public void SetDate(int year, TimeSeason season, int day)
+    {
+        this.year = year;
+        this.season = (int)season;
+        this.day = day;
+    }
+
+    public string GetDateText()
     {
         string time_text = "";
 
@@ -46,6 +53,11 @@ public class WorldController : BaseControllerMono<WorldController>
             time_text += " th";
 
         return time_text;
+    }
+
+    public string GetTimeText()
+    {
+        return hour_time + " : " + minute_time;
     }
 }
 

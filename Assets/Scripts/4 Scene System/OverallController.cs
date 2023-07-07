@@ -196,7 +196,7 @@ public struct SceneEvents
     public void EnterHomeScene()
     {
         // Change scene
-        GUIController.Controller().ShowPanel<GeneralPanel>("GeneralPanel", 2);
+        GUIController.Controller().ShowPanel<BottomPanel>("BottomPanel", 1);
 
         // Start Music
         AudioController.Controller().PlayMusic("MorningBGM");

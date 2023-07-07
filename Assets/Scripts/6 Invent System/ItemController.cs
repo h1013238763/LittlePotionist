@@ -8,15 +8,10 @@ public class ItemController : BaseController<ItemController>
     private XmlDictionary<string, Item> item_dict = new XmlDictionary<string, Item>();
     // inventory dictionary, store all inventory data
     private XmlDictionary<string, StoreItem[]> invent_dict = new XmlDictionary<string, StoreItem[]>();
+    // item hold in pointer
+    public StoreItem hold_item;
     // total money player has
     public int wealth;
-    
-
-
-    public void TempTest()
-    {
-        
-    }
 
     /// <summary>
     /// Initial the Item Dictionary
@@ -70,7 +65,7 @@ public class ItemController : BaseController<ItemController>
                 break;
             }     
         }
-        RefreshGUI(invent_name);
+        EventController.Controller().EventTrigger("ItemController/ItemChange");
         return ( add_item.item_num <= 0)? num : num - add_item.item_num;
     }
 
@@ -110,7 +105,7 @@ public class ItemController : BaseController<ItemController>
                 break;
             }   
         }
-        RefreshGUI(invent_name);
+        EventController.Controller().EventTrigger("ItemController/ItemChange");
         return ( num <= 0)? num_re : num_re - num;
     }
 
@@ -129,83 +124,88 @@ public class ItemController : BaseController<ItemController>
     }
 
     /// <summary>
-    /// move the item from "from" invent to "to" invent
+    /// Transfer Item between inventorys
     /// </summary>
-    /// <param name="from"></param>
-    /// <param name="to"></param>
-    /// <param name="from_index"></param>
-    /// <param name="to_index"></param>
-    public void TransferItem(string from, string to, int from_index, int to_index = -1)
+    public void TransferItem(string invent, int index, bool all)
     {
-        // inventory exist check
-        if( !invent_dict.ContainsKey(from) || !invent_dict.ContainsKey(to) )
-            return;
-        // get item info and item exist check
-        if(invent_dict[from][from_index] == null)
-            return;
-        Item item = item_dict[invent_dict[from][from_index].item_id];
-
-
-
-        // quick move
-        if(to_index == -1)
+        // pick one item
+        if(hold_item == null)
         {
-            if(to == "QuickSlot")   // move to quick slot ( quick fill or set up )
-            {
-                for(int i = 0; i < 8; i ++) // try to find same item
-                {
-                    if(invent_dict[to][i] == null)
-                    {
-                        if(to_index == -1)
-                            to_index = i;
-                        else
-                            continue;
-                    }
-                    else if(invent_dict[to][i].item_id == item.item_id)
-                    {
-                        to_index = i;
-                        break;
-                    }   
-                }
-                
-                if(to_index == -1)    // if no slot available
-                    return;
+            if(!SlotCheck(invent, index))    // no item to interact with
+                return;
+            
+            // play sound
+            AudioController.Controller().PlaySound("SliderDrag");
 
-                // assign and set slot
-                if(invent_dict[to][to_index] == null)
-                    invent_dict[to][to_index] = new StoreItem();
-                invent_dict[to][to_index].item_id = item.item_id;
-                invent_dict[to][to_index].item_num += invent_dict[from][from_index].item_num;
-                OverstackCheck(invent_dict[from][from_index], invent_dict[to][to_index]);
-            }
-            else    // quick move item to other inventory
+            if(all) // pick all item
             {
-                invent_dict[from][from_index].item_num -= AddItem(to, item.item_id, invent_dict[from][from_index].item_num);
+                hold_item = invent_dict[invent][index];
+                invent_dict[invent][index] = null;
+            }
+            else    // pick one item
+            {
+                hold_item = invent_dict[invent][index];
+                hold_item.item_num = 1;
+                invent_dict[invent][index].item_num --;
+                if(invent_dict[invent][index].item_num <= 0)
+                    invent_dict[invent][index] = null;
             }
         }
-        // drag add or swap
         else
-        {   // if they are same item
-            if(invent_dict[from][from_index].item_id == invent_dict[to][to_index].item_id)
+        {
+            if(invent == "World")// drop item into world
             {
-                invent_dict[to][to_index].item_num += invent_dict[from][from_index].item_num;
-                OverstackCheck(invent_dict[from][from_index], invent_dict[to][to_index]);
+                // get player face position
+                bool left = PlayerController.Controller().gameObject.GetComponent<SpriteRenderer>().flipX;
+                Vector3 pos = PlayerController.Controller().transform.position;
+                pos += (left) ? new Vector3(-4, 0, 0) : new Vector3(4, 0, 0);
+                // drop item into world
+                CreateDropItem(hold_item.item_id, hold_item.item_num, pos);
+                // remove item in hold
+                hold_item = null;
             }
-            else
+            else if(all)    // try to drop all item into this slot
             {
-                StoreItem swap_temp = invent_dict[from][from_index];
-                invent_dict[from][from_index] = invent_dict[to][to_index];
-                invent_dict[to][to_index] = swap_temp;
+                // play sound
+                AudioController.Controller().PlaySound("SliderDrag");
+
+                // if slot is empty
+                if(invent_dict[invent][index] == null)
+                {
+                    invent_dict[invent][index] = hold_item;
+                    hold_item = null;
+                }
+                else if(invent_dict[invent][index].item_num <= 0)
+                {
+                    invent_dict[invent][index] = hold_item;
+                    hold_item = null;
+                }
+                // if slot contains same item
+                else if(invent_dict[invent][index].item_id == hold_item.item_id)
+                {
+                    invent_dict[invent][index].item_num += hold_item.item_num;
+                    OverstackCheck(hold_item, invent_dict[invent][index]);
+                    if(hold_item.item_num <= 0)
+                        hold_item = null;
+                }
+            }
+            // pick one more same item
+            else if(invent_dict[invent][index] != null)
+            {
+                // play sound
+                AudioController.Controller().PlaySound("SliderDrag");
+
+                if(invent_dict[invent][index].item_id == hold_item.item_id && invent_dict[invent][index].item_num > 0)
+                {
+                    hold_item.item_num ++;
+                    invent_dict[invent][index].item_num --;
+                    if(invent_dict[invent][index].item_num <= 0)
+                        invent_dict[invent][index] = null;
+                }
             }
         }
-
-        if(invent_dict[from][from_index].item_num == 0)
-            invent_dict[from][from_index] = null;
-
-        RefreshGUI(from);
-        RefreshGUI(to);
+        EventController.Controller().EventTrigger("ItemController/ItemChange");
     }
-
 
     /// <summary>
     /// create a target item with given num at given position, if is drop, preform drop moving animation
@@ -262,6 +262,14 @@ public class ItemController : BaseController<ItemController>
         if(item_dict.ContainsKey(id))
             return item_dict[id];
         return null;
+    }
+
+    public Item GetItemInfo(string invent, int index)
+    {
+        if(SlotCheck(invent, index))
+            return GetItemInfo(invent_dict[invent][index].item_id);
+        else
+            return null;
     }
 
     /// <summary>
@@ -368,6 +376,30 @@ public class ItemController : BaseController<ItemController>
     }
 
     /// <summary>
+    /// check if the target slot contains any item
+    /// </summary>
+    /// <param name="invent">target invent</param>
+    /// <param name="index">target slot of invent</param>
+    public bool SlotCheck(string invent, int index)
+    {
+        // invent check
+        if(!invent_dict.ContainsKey(invent))
+            return false;
+        // index check
+        if(index < 0 || index >= invent_dict[invent].Length)
+            return false;
+        // slot check
+        if(invent_dict[invent][index] == null)
+            return false;
+        // slot item num check
+        if(invent_dict[invent][index].item_num <= 0)
+            return false;
+
+        // pass all checks
+        return true;
+    }
+
+    /// <summary>
     /// Add Inventory to inventory dictionary
     /// </summary>
     /// <param name="name">name of gameobject</param>
@@ -388,27 +420,5 @@ public class ItemController : BaseController<ItemController>
         if(invent_dict.ContainsKey(name))
             return invent_dict[name];
         return null;
-    }
-
-    /// <summary>
-    /// Refresh Inventory related GUI
-    /// </summary>
-    private void RefreshGUI(string invent)
-    {
-        switch(invent)
-        {
-            case "Player":
-                if(GUIController.Controller().GetPanel<InventoryPanel>("InventoryPanel") != null)
-                    GUIController.Controller().GetPanel<InventoryPanel>("InventoryPanel").Refresh();
-                break;
-            case "QuickSlot":
-                if(GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel") != null)
-                    GUIController.Controller().GetPanel<GeneralPanel>("GeneralPanel").Refresh();
-                break;
-            default:
-                break;
-        }
-        // if inventory panel is showing, refresh it
-        
     }
 }

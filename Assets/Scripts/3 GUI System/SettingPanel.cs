@@ -11,7 +11,7 @@ public class SettingPanel : PanelBase
 
     public override void ShowSelf()
     {
-        config = OverallController.Controller().config;
+        config = XmlController.Controller().LoadData(typeof(SettingConfig), "Config") as SettingConfig;
         // resolution setting
         resolutions = Screen.resolutions;
         List<string> options = new List<string>();
